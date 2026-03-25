@@ -1,10 +1,22 @@
 # RAG Chunking Playground
 
-> **Compare 6 chunking strategies side-by-side.** Paste your docs, see exactly how fixed-size, recursive, semantic, and 3 other strategies split them differently—with live quality grades, token counts, and export-ready code.
+> Compare 6 chunking strategies side-by-side — and actually *see* why chunking matters.
 
-**[Try the Live Tool](https://aiagentsbuzz.com/tools/rag-chunking-playground/)** | **[Read the Strategy Guide](https://aiagentsbuzz.com/guides/rag-chunking-strategies/)**
+![GitHub stars](https://img.shields.io/github/stars/ai-agents-buzz/rag-chunking-playground)
+![MIT License](https://img.shields.io/badge/license-MIT-green)
 
-![RAG Chunking Strategies Comparison](https://aiagentsbuzz.com/images/rag-chunking-preview.png)
+<p align="center">
+  <a href="https://aiagentsbuzz.com/tools/rag-chunking-playground/">
+    <img src="https://img.shields.io/badge/🚀%20Try%20Live%20Tool-black?style=for-the-badge">
+  </a>
+  <a href="https://aiagentsbuzz.com/guides/rag-chunking-strategies/">
+    <img src="https://img.shields.io/badge/📖%20Read%20Guide-blue?style=for-the-badge">
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://aiagentsbuzz.com/images/rag-chunking-preview.png" width="800">
+</p>
 
 ---
 
@@ -22,6 +34,12 @@ You need to **SEE** the difference, not guess.
 
 ---
 
+##  TL;DR
+
+- Chunking can change retrieval accuracy by 10–30%
+- Most people use bad defaults
+- This tool lets you *see* the difference instantly
+
 ## Features
 
 ✅ **6 strategies compared:** Fixed, Recursive, Sentence, Markdown, Regex, Semantic (coming soon) 
@@ -35,10 +53,10 @@ You need to **SEE** the difference, not guess.
 
 ## Quick Start
 
-### Online (Easiest)
+### Online
 Visit **[aiagentsbuzz.com/tools/rag-chunking-playground](https://aiagentsbuzz.com/tools/rag-chunking-playground/)**
 
-### Run On Your Machine
+### OR .. Run On Your Machine
 ```bash
 git clone https://github.com/ai-agents-buzz/rag-chunking-playground
 cd rag-chunking-playground
@@ -59,14 +77,13 @@ No build step. No dependencies. Just open `index.html` in your browser.
 
 **Strategy Comparison:**
 
-| Strategy | Best For | Downside | Avg Quality |
-|----------|----------|----------|-------------|
-| **Fixed-size** | Speed, simple docs | Cuts mid-sentence | 🟡 54% |
-| **Recursive** | Code, markdown | Complex logic | 🟢 69% |
-| **Sentence** | Clean boundaries | Uneven sizes | 🟢 72% |
-| **Markdown** | Docs with headers | Requires structure | 🟢 76% |
-| **Regex** | Custom patterns | Manual tuning | 🟡 Variable |
-| **Semantic** | Topic coherence | Slow + costly | 🟢 87% |
+| Strategy     | Quality | Speed | Cost | Best Use Case |
+|--------------|--------|------|------|--------------|
+| Fixed-size   | 🟡 54% | ⚡⚡⚡⚡ | 💲 | Simple docs |
+| Recursive    | 🟢 69% | ⚡⚡⚡ | 💲 | Code + markdown |
+| Sentence     | 🟢 72% | ⚡⚡ | 💲 | Clean text |
+| Markdown     | 🟢 76% | ⚡⚡⚡ | 💲 | Structured docs |
+| Semantic     | 🟢 87% | ⚡ | 💲💲💲 | High-accuracy RAG |
 
 **[Full strategy guide with benchmarks →](https://aiagentsbuzz.com/guides/rag-chunking-strategies/)**
 
@@ -77,11 +94,11 @@ No build step. No dependencies. Just open `index.html` in your browser.
 
 ### Document View with Inline Chunks
 See exactly where each strategy cuts your text, with hover tooltips
-![Document Viewing Window]https://aiagentsbuzz.com/images/screenshot-view-window.png
+![Document Viewing Window](https://aiagentsbuzz.com/images/screenshot-view-window.png)
 
 ### Query Retrieval Test
 Test which chunks get retrieved for a sample query using BM25 ranking
-![Query Test]https://aiagentsbuzz.com/images/screenshot-query-retrieval.png
+![Query Test](https://aiagentsbuzz.com/images/screenshot-query-results.png)
 
 
 ---
@@ -105,7 +122,7 @@ Visual, interactive beats reading theory
 ## Tech Stack
 
 - **Frontend:** Vanilla JavaScript (no frameworks)
-- **Styling:** Custom CSS with glassmorphism effects
+- **Styling:** Custom CSS
 - **Fonts:** DM Sans, Fira Code, Caveat
 - **PDF Support:** PDF.js
 - **Token Counting:** GPT-3 estimation (1 token ≈ 4 chars)
