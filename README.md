@@ -9,9 +9,7 @@
   <a href="https://aiagentsbuzz.com/tools/rag-chunking-playground/">
     <img src="https://img.shields.io/badge/🚀%20Try%20Live%20Tool-black?style=for-the-badge">
   </a>
-  <a href="https://aiagentsbuzz.com/guides/rag-chunking-strategies/">
-    <img src="https://img.shields.io/badge/📖%20Read%20Guide-blue?style=for-the-badge">
-  </a>
+
 </p>
 
 <p align="center">
@@ -22,7 +20,7 @@
 
 ## Why This Exists
 
-Most RAG tutorials skip chunking or say "use 512 tokens lol." But **chunking strategy matters!**
+Most RAG tutorials skip chunking or say "just use 512 tokens." But **chunking strategy matters!**
 
 We built this because:
 
@@ -42,7 +40,7 @@ You need to **SEE** the difference, not guess.
 
 ## Features
 
-✅ **6 strategies compared:** Fixed, Recursive, Sentence, Markdown, Regex, Semantic (coming soon) 
+✅ **6 strategies compared:** Fixed, Recursive, Sentence, Markdown, Regex, Semantic (coming soon)
 ✅ **Live quality grading:** Green (clean), Yellow (warnings), Red (broken chunks)  
 ✅ **Visual diff view:** Hover any chunk to highlight it in the doc  
 ✅ **Cost calculator:** Embedding + context window costs for OpenAI/Cohere  
@@ -124,6 +122,7 @@ Visual, interactive beats reading theory
 - **Frontend:** Vanilla JavaScript (no frameworks)
 - **Styling:** Custom CSS
 - **Fonts:** DM Sans, Fira Code, Caveat
+- **Query:** Uses BM25 for query selection
 - **PDF Support:** PDF.js
 - **Token Counting:** GPT-3 estimation (1 token ≈ 4 chars)
 - **Optional:** OpenAI API for semantic chunking
@@ -153,7 +152,7 @@ Found a bug? Have a new strategy idea? **PRs welcome!**
 ## Learn More
 
 📖 **[Full RAG Chunking Strategy Guide](https://aiagentsbuzz.com/guides/rag-chunking-strategies/)** - 4000+ words with benchmarks, decision framework, and real data  
-🧰 **[More AI Tools](https://aiagentsbuzz.com)** - Directory of AI agent tools  
+🧰 **[Buy vs. Build Calculator](https://aiagentsbuzz.com/tools/build-vs-buy-calculator/)** - Should you build a custom agent or buy one off the shelf?
 🤖 **[AI Agents Directory](https://aiagentsbuzz.com)** - 300+ AI agents reviewed  
 
 ---
