@@ -1,142 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" class="side-bg-fix">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"><meta name="description" content="Free interactive RAG chunking tool: compare fixed-size, recursive, sentence, markdown, regex and semantic chunking side by side. Visualize chunk quality with green/yellow/red grading, see token counts and embedding costs, and export code for LangChain, LlamaIndex, and Haystack."><title>RAG Chunking Playground: Compare 6 Strategies Side by Side (Free Tool)</title><link rel="stylesheet" href="/css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="canonical" href="https://aiagentsbuzz.com/tools/rag-chunking-playground/">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Monda:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG Chunking Playground - Compare 6 Strategies</title>
 
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "AI Agents Buzz",
-  "url": "https://aiagentsbuzz.com",
-  "copyrightYear": "2025",
-  "copyrightHolder": {
-    "@type": "Organization",
-    "name": "AI Agents Buzz"
-  }
-}
-</script>
+ <!-- CANONICAL & ATTRIBUTION -->
+  <link rel="canonical" href="https://aiagentsbuzz.com/tools/rag-chunking-playground/">
+  <meta name="author" content="AI Agents Buzz">
+  <meta name="creator" content="AI Agents Buzz">
+  <meta property="article:published_time" content="2026-03-25">
   
-<meta property="og:title" content="RAG Chunking Playground: Compare 6 Strategies Side by Side (Free Tool)">
-<meta property="og:description" content="Free interactive RAG chunking tool: compare fixed-size, recursive, sentence, markdown, regex and semantic chunking side by side. Visualize chunk quality with green/yellow/red grading, see token counts and embedding costs, and export code for LangChain, LlamaIndex, and Haystack.">
-<meta property="og:url" content="https://aiagentsbuzz.com/tools/rag-chunking-playground/">
-<meta property="og:type" content="article">
-<meta property="og:image" content="https://aiagentsbuzz.com/images/og-default.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="RAG Chunking Playground: Compare 6 Strategies Side by Side (Free Tool)">
-<meta name="twitter:description" content="Free interactive RAG chunking tool: compare fixed-size, recursive, sentence, markdown, regex and semantic chunking side by side. Visualize chunk quality with green/yellow/red grading, see token counts and embedding costs, and export code for LangChain, LlamaIndex, and Haystack.">
-<meta name="twitter:image" content="https://aiagentsbuzz.com/images/og-default.png">
-
-<script type="module" integrity="sha512-I1nWw2KfQnK/t/zOlALFhLrZA1yzsCzBl7DxamXdg/QF7kq+O4sYBZLl0DFCE7vP2ixPccL/k0/oqvhyDB73zQ==" src="/.11ty/reload-client.js"></script></head>
-
-
-<style>
-.share-float {
-  position: fixed;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  z-index: 50;
-}
-.share-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: #33383c;
-  border: 1px solid rgba(255,255,255,0.06);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  color: #6b7280;
-}
-.share-btn:hover {
-  border-color: rgba(6,182,212,0.3);
-  color: #e1e7ef;
-  transform: scale(1.1);
-  box-shadow: 0 0 12px rgba(6,182,212,0.15);
-}
-.share-btn svg {
-  width: 16px;
-  height: 16px;
-}
-/* Hide on small screens — not enough space */
-@media(max-width: 1100px) {
-  .share-float { display: none; }
-}
-</style>
-
-<div class="share-float">
-  <!-- Twitter/X -->
-  <a class="share-btn" id="shareTwitter" target="_blank" rel="noopener" aria-label="Share on X">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-  </a>
-  <!-- LinkedIn -->
-  <a class="share-btn" id="shareLinkedIn" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-  </a>
-</div>
-
-<script>
-// Auto-populate share URLs from current page
-(function(){
-  var url = encodeURIComponent(window.location.href);
-  var title = encodeURIComponent(document.title);
+  <!-- OPEN GRAPH (Social sharing) -->
+  <meta property="og:url" content="https://aiagentsbuzz.com/tools/rag-chunking-playground/">
+  <meta property="og:site_name" content="AI Agents Buzz">
+  <meta property="og:type" content="website">
   
-  var tw = document.getElementById('shareTwitter');
-  if(tw) tw.href = 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+  <!-- TWITTER CARD -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@aiagentsbuzz">
+  <meta name="twitter:creator" content="@aiagentsbuzz">
   
- var li = document.getElementById('shareLinkedIn');
-if(li) li.href = 'https://www.linkedin.com/feed/?shareActive=true&text=' + encodeURIComponent(document.title + ' ' + window.location.href);
-})();
-</script>
-<body>
-<nav>
-    <div class="logo"><a href="/"><img src="/images/ai-agent-logo.png" alt="AI Agents Buzz Logo" width="120" height="auto"></a><br>AI Agent Directory</div>
-    <button class="mobile-menu-toggle" onclick="toggleMenu()">☰</button>
-    <div class="nav-links" id="navLinks">
-        <a href="/">Home</a>
-        <div class="nav-dropdown">
-    <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
-        Guides <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left:4px;"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <div class="nav-dropdown-menu">
-        <a href="/guides/build-vs-buy-ai-guide/">Build vs. Buy AI Guide</a>
-        <a href="/guides/rag-chunking-strategies/">RAG Chunking Strategies</a>
-        <!-- add more tools here later -->
-    </div>
-</div>
-        <div class="nav-dropdown">
-    <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
-        Tools <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left:4px;"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <div class="nav-dropdown-menu">
-        <a href="/tools/ai-cost-calculator/">API Cost Calculator</a>
-        <a href="/tools/build-vs-buy-calculator/">Build vs. Buy Calculator</a>
-        <a href="/tools/rag-chunking-playground/">RAG Chunking Playground</a>
-        <!-- add more tools here later -->
-    </div>
-</div>
-        <a href="/categories/">Categories</a>
-        <a href="/news/">News</a>
-        <a href="/contact/">Contact</a>
-        <a href="/submit/" class="submit-button">Submit Your Agent</a>
-    </div>
-</nav>
-   <main>
+  <!-- FINGERPRINT: Hidden in meta (won't display) -->
+  <meta name="original-source" content="aiagentsbuzz.com">
+  <meta name="creation-date" content="2026-03-25">
+  <meta name="tool-version" content="1.0-aiab">
 
-        
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -333,6 +223,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 .abtn-p{background:rgba(6,182,212,0.06);border-color:rgba(6,182,212,0.2);color:var(--teal)}.abtn-p:hover{background:rgba(6,182,212,0.12)}
 .abtn-s{background:transparent;border-color:var(--bdr);color:var(--t2)}.abtn-s:hover{border-color:var(--bdr-h);color:var(--t1)}
 
+
+/* ═══════════════════════════════════════════════════════
+   RAG Chunking Playground
+   Original: aiagentsbuzz.com/tools/rag-chunking-playground
+   Created: 2026-03-25
+   Author: AI Agents Buzz
+   ═══════════════════════════════════════════════════════ */
+
+/* Fingerprint classes*/
+.aiab-origin-2026 { }
+.rag-chunk-v1 { }
+.source-aiagentsbuzz { }
+
 /* Code export */
 .code-section{display:none;margin-top:12px}.code-section.show{display:block}
 .code-tabs{display:flex;gap:2px}.ctab{padding:5px 12px;border-radius:6px 6px 0 0;font-size:9px;font-weight:600;border:1px solid var(--bdr);border-bottom:none;background:transparent;color:var(--t2);cursor:pointer;font-family:var(--sans)}.ctab.active{background:var(--pnl);color:var(--teal);border-color:rgba(6,182,212,0.15)}
@@ -343,33 +246,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 .ft{text-align:center;padding:20px 0 0;font-size:10px;color:var(--t3);margin-top:16px;border-top:1px solid var(--bdr)}.ft a{color:var(--teal);text-decoration:none}
 .gh-link{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--bdr);border-radius:6px;font-size:10px;font-weight:600;color:var(--t2);text-decoration:none;transition:all .15s;margin-top:8px}.gh-link:hover{border-color:var(--bdr-h);color:var(--t1)}
 
-.breadcrumbs {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 8px 20px 0;
-  font-size: 12px;
-  background-color:rgb(0, 0, 0);
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 6px;
-}
-.breadcrumbs a {
-  color: #8b98ab;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.breadcrumbs a:hover {
-  color: #06b6d4;
-}
-.breadcrumbs .bc-sep {
-  color: #4e5d73;
-  font-size: 10px;
-}
-.breadcrumbs .bc-current {
-  color: #c8cdd3;
-  font-weight: 600;
-}
 
 .query-btn {
   padding: 5px 15px;
@@ -414,14 +290,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 </style>
 </head>
 <body>
+
+  <!-- 
+═══════════════════════════════════════════════════════════════
+  RAG Chunking Playground
+  
+  Original Source: https://aiagentsbuzz.com/tools/rag-chunking-playground
+  Created: March 25, 2026
+  Author: AI Agents Buzz
+  GitHub: https://github.com/ai-agents-buzz/rag-chunking-playground
+  
+  If you're forking this: Cool! Just keep the attribution footer
+  and link back to the original. Thanks for respecting open source.
+  
+  License: MIT (with attribution required)
+  
+  Fingerprint: AIAB-RAG-CHUNK-2026-v1.0
+═══════════════════════════════════════════════════════════════
+-->
+
 <div class="bg-grid"></div><div class="bg-g1"></div>
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-  <a href="/">Home</a>
-  <span class="bc-sep"><span class="bc-sep"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2 1l3 3-3 3" stroke="rgb(126, 127, 130)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
-  <a href="/tools/">Tools</a>
-  <span class="bc-sep"><span class="bc-sep"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2 1l3 3-3 3" stroke="rgb(138, 145, 154)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
-  <span class="bc-current">RAG Chunking Playground</span>
-</nav>  
+
 <div class="wrap">
   
 <div class="hdr">
@@ -517,28 +406,175 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
     <div style="font-size:14px;font-weight:700;color:#facc15;margin-bottom:3px">Want to understand why these strategies perform differently?</div>
     <div style="font-size:13px;color:#c8cdd3">Read the companion guide — 2026 benchmarks, chunk size data, and a strategy quiz.</div>
   </div>
-  <a href="/guides/rag-chunking-strategies/" style="padding:10px 24px;background:linear-gradient(135deg,#facc15,#eab308);color:#1a1f24;font-weight:700;font-size:13px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:all .2s">Read the Guide →</a>
+  <a href="https://aiagentsbuzz.com/guides/rag-chunking-strategies/" style="padding:10px 24px;background:linear-gradient(135deg,#facc15,#eab308);color:#1a1f24;font-weight:700;font-size:13px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:all .2s">Read the Guide →</a>
 </div>
 
 </div>
 
-<div class="ft">
-  100% client-side · no text sent to servers · open source<br>
-<!--  <a href="https://github.com/ai-agents-buzz/rag-chunking-playground" target="_blank" class="gh-link"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Star on GitHub</a> -->
-  <div style="margin-top:6px">Built by <a href="https://aiagentsbuzz.com">AI Agents Buzz</a></div>
+<div style="text-align:center; padding:40px 20px; margin-top:60px; border-top:1px solid rgba(255,255,255,0.16); color:#7d8590; font-size:13px;">
+  <p style="margin:0 0 8px 0;">Created by <a href="https://aiagentsbuzz.com" style="color:#06b6d4; text-decoration:none;" target="_blank">AI Agents Buzz</a> • March 2026</p>
+  <p style="margin:0; font-size:11px;">
+    <a href="https://github.com/ai-agents-buzz/rag-chunking-playground" style="color:#7d8590; text-decoration:none;" target="_blank">Open Source on GitHub</a> • 
+    <a href="https://aiagentsbuzz.com/tools/rag-chunking-playground/" style="color:#7d8590; text-decoration:none;" target="_blank">Try Live Version</a> • 
+    <a href="https://aiagentsbuzz.com/guides/rag-chunking-strategies/" style="color:#7d8590; text-decoration:none;" target="_blank">Read Full Guide</a>
+  </p>
 </div>
 
 
 </div>
 
+</body>
+</html>
 <script>
+
+// ═══════════════════════════════════════════════════════
+// 
+// ═══════════════════════════════════════════════════════
+(function() {
+  // Method 1: Character codes (domain split into 3 parts)
+  var c1 = [104,116,116,112,115,58,47,47];  // "https://"
+  var c2 = [97,105,97,103,101,110,116,115]; // "aiagents"
+  var c3 = [98,117,122,122,46,99,111,109];  // "buzz.com"
+  
+  // Method 2: Reversed segments for path
+  var r1 = 'sloot/'.split('').reverse().join('');           // "/tools"
+  var r2 = 'dnuorgyal'.split('').reverse().join('');        // "layground"
+  var r3 = 'p-gniknuhc-gar/'.split('').reverse().join('');  // "/rag-chunking-p"
+  
+  // Assemble full URL
+  var base = String.fromCharCode.apply(null, c1.concat(c2, c3));
+  var path = '/' + r1 + r3 + r2 + '/';
+  var full = base + path;
+  
+  // Inject in multiple hidden ways
+  var methods = [
+    function() {
+      // 1. Canonical link in head
+      var l = document.createElement('link');
+      l.rel = 'canonical';
+      l.href = full;
+      document.head.appendChild(l);
+    },
+    function() {
+      // 2. Hidden anchor in body
+      var a = document.createElement('a');
+      a.href = full;
+      a.rel = 'author';
+      a.style.cssText = 'position:fixed;left:-9999px;opacity:0;pointer-events:none;';
+      a.setAttribute('data-v', btoa(Date.now().toString()));
+      a.textContent = 'src';
+      document.body.appendChild(a);
+    },
+    function() {
+      // 3. Open Graph meta tag
+      var m = document.createElement('meta');
+      m.setAttribute('property', 'og:url');
+      m.content = full;
+      document.head.appendChild(m);
+    },
+    function() {
+      // 4. Hidden in multiple DOM locations
+      var wrapper = document.querySelector('.wrap');
+      if (wrapper) {
+        var hidden = document.createElement('div');
+        hidden.style.display = 'none';
+        hidden.setAttribute('data-source', btoa(base));
+        wrapper.appendChild(hidden);
+      }
+    },
+    function() {
+      // 5. Console fingerprint (invisible)
+      var fp = btoa(base.split('//')[1] + '-' + new Date().getFullYear());
+      console.log('%cOrigin: ' + fp, 'font-size:1px;color:transparent;');
+    },
+    function() {
+      // 6. Store in obscure globals
+      if (typeof window.performance !== 'undefined') {
+        window.performance.timing.__origin = base;
+      }
+      window.__verification = { s: base, t: path, v: '1.0' };
+    },
+    function() {
+      // 7. LocalStorage backup (survives page reload)
+      try {
+        var key = btoa('verification');
+        localStorage.setItem(key, btoa(full));
+      } catch(e) {}
+    },
+    function() {
+      // 8. Hidden link in strategy map (when it exists)
+      setTimeout(function() {
+        var map = document.getElementById('stratMap');
+        if (map) {
+          var beacon = document.createElement('a');
+          beacon.href = full;
+          beacon.style.cssText = 'display:none;';
+          beacon.setAttribute('rel', 'canonical author');
+          map.appendChild(beacon);
+        }
+      }, 500);
+    }
+  ];
+  
+  // Execute all methods with random delays
+  methods.forEach(function(fn, i) {
+    setTimeout(fn, Math.random() * 200 + i * 10);
+  });
+  
+  // Mutation observer - watches for footer removal
+  setTimeout(function() {
+    var checkFooter = function() {
+      var footerExists = document.querySelector('[href*="' + base.substring(8, 12) + '"]') || 
+                        document.body.textContent.indexOf('March 2026') !== -1;
+      
+      if (!footerExists && document.body.children.length > 5) {
+        // Footer was removed - add warning
+        console.warn('%c⚠ Attribution removed - violates MIT license', 
+          'color:#ef4444;font-size:14px;font-weight:bold;');
+      }
+    };
+    
+    var observer = new MutationObserver(function(mutations) {
+      var shouldCheck = false;
+      mutations.forEach(function(m) {
+        if (m.type === 'childList' && m.removedNodes.length > 0) {
+          shouldCheck = true;
+        }
+      });
+      if (shouldCheck) setTimeout(checkFooter, 100);
+    });
+    
+    observer.observe(document.body, { childList: true, subtree: true });
+  }, 1000);
+  
+})();
+
+  // ═══ Source Watermark ═══
+(function() {
+  const _origin = atob('aHR0cHM6Ly9haWFnZW50c2J1enouY29t'); // base64: https://aiagentsbuzz.com
+  const _tool = '/tools/rag-chunking-playground';
+  const _created = '2026-03-25';
+  const _fp = 'AIAB-RAG-v1';
+  
+  // Log to console (visible in DevTools)
+  console.log(`%c🔬 RAG Chunking Playground`, 'font-size:16px; font-weight:bold; color:#8b5cf6');
+  console.log(`%cOriginal: ${_origin}${_tool}`, 'color:#10b981');
+  console.log(`%cCreated: ${_created} by AI Agents Buzz`, 'color:#6b7280');
+  console.log(`%cGitHub: https://github.com/ai-agents-buzz/rag-chunking-playground`, 'color:#3b82f6');
+  console.log(`%cFingerprint: ${_fp}`, 'color:#ef4444; font-family:monospace');
+  
+  // Store in window for verification
+  window.__AIAB_ORIGIN__ = { origin: _origin, tool: _tool, created: _created, fp: _fp };
+})();
+
 // =========================================================================
 // ENGINE
 // =========================================================================
 function estimateTokens(t){return t?Math.ceil(t.length/4):0}
 var STOP_WORDS=new Set(['the','a','an','is','are','was','were','be','been','being','have','has','had','do','does','did','will','would','shall','should','may','might','must','can','could','of','in','to','for','with','on','at','by','from','as','into','through','during','before','after','above','below','between','under','again','further','then','once','here','there','when','where','why','how','all','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','just','about','also','and','but','or','if','while','that','this','it','its','they','them','their','what','which','who','these','those']);
 
-function chunkFixed(text,sz,ov){sz=sz||400;ov=ov||0;var ch=[],chars=sz*4,ovC=ov*4,step=Math.max(chars-ovC,1),p=0;while(p<text.length){var e=Math.min(p+chars,text.length);ch.push({text:text.slice(p,e),start:p,end:e,tokens:estimateTokens(text.slice(p,e)),issues:[]});p+=step;if(p>=text.length)break}return ch}
+function chunkFixed(text,sz,ov){sz=sz||400;ov=ov||0;var ch=[],chars=sz*4,ovC=ov*4,step=Math.max(chars-ovC,1),p=0;while(p<text.length){var e=Math.min(p+chars,text.length);
+  ch.push({text:text.slice(p,e),start:p,end:e,tokens:estimateTokens(text.slice(p,e)),issues:[]});p+=step;if(p>=text.length)break}return ch}
 
 function chunkRecursive(text,sz,ov){sz=sz||400;ov=ov||50;var mxC=sz*4,ovC=ov*4,seps=['\n\n','\n','. ','! ','? ','; ',', ',' '],ch=[];function sr(txt,sp){if(estimateTokens(txt)<=sz){if(txt.trim())ch.push({text:txt.trim(),start:0,end:0,tokens:estimateTokens(txt.trim()),issues:[]});return}var sep=null;for(var i=0;i<sp.length;i++){if(txt.indexOf(sp[i])!==-1){sep=sp[i];break}}if(!sep){var ck=txt.slice(0,mxC);ch.push({text:ck,start:0,end:0,tokens:estimateTokens(ck),issues:['forced split']});var rem=txt.slice(mxC-ovC);if(rem.trim())sr(rem,sp);return}var pts=txt.split(sep),cur='';for(var j=0;j<pts.length;j++){var pc=pts[j]+(j<pts.length-1?sep:'');if(estimateTokens(cur+pc)>sz&&cur.trim()){ch.push({text:cur.trim(),start:0,end:0,tokens:estimateTokens(cur.trim()),issues:[]});cur=ovC>0&&cur.length>ovC?cur.slice(-ovC)+pc:pc}else cur+=pc}if(cur.trim())ch.push({text:cur.trim(),start:0,end:0,tokens:estimateTokens(cur.trim()),issues:[]})}sr(text,seps);var sp2=0;for(var k=0;k<ch.length;k++){var f=text.indexOf(ch[k].text,sp2);if(f>=0){ch[k].start=f;ch[k].end=f+ch[k].text.length;sp2=f+1}}return ch}
 
@@ -588,6 +624,93 @@ var EMB=[{n:'OpenAI small',p:.02},{n:'OpenAI large',p:.13},{n:'Cohere v3',p:.10}
 function calcCosts(tt){return EMB.map(function(m){return{name:m.n,cost:m.p>0?(tt*m.p/1e6):0,free:m.p===0}})}
 var CTX=[{n:'GPT-4o 128K',t:128000},{n:'Claude 200K',t:200000},{n:'Gemini 1M',t:1000000}];
 function calcCtx(avg){var u=avg*5;return CTX.map(function(m){return{name:m.n,pct:((u/m.t)*100).toFixed(2)}})}
+
+// ═══════════════════════════════════════════════════════
+// PROTECTED FOOTER - Generated at Runtime
+// ═══════════════════════════════════════════════════════
+(function() {
+  // Build footer from character codes
+  var t1 = String.fromCharCode(67,114,101,97,116,101,100,32,98,121,32); // "Created by "
+  var t2 = String.fromCharCode(65,73,32,65,103,101,110,116,115,32,66,117,122,122); // "AI Agents Buzz"
+  var t3 = String.fromCharCode(32,8226,32,77,97,114,99,104,32,50,48,50,54); // " • March 2026"
+  
+  // URL parts
+  var u1 = [104,116,116,112,115,58,47,47];
+  var u2 = [97,105,97,103,101,110,116,115,98,117,122,122,46,99,111,109];
+  var url = String.fromCharCode.apply(null, u1.concat(u2));
+  
+  // Links
+  var links = [
+    { text: String.fromCharCode(79,112,101,110,32,83,111,117,114,99,101,32,111,110,32,71,105,116,72,117,98), 
+      url: url.replace('buzz', 'buzz') + '/tools' }, // GitHub (encoded differently)
+    { text: String.fromCharCode(84,114,121,32,76,105,118,101,32,86,101,114,115,105,111,110), 
+      url: url + '/tools/rag-chunking-playground/' },
+    { text: String.fromCharCode(82,101,97,100,32,70,117,108,108,32,71,117,105,100,101), 
+      url: url + '/guides/rag-chunking-strategies/' }
+  ];
+  
+  // Create footer element
+  var footer = document.createElement('div');
+  footer.className = 'tool-footer';
+  footer.style.cssText = 'text-align:center;padding:40px 20px;margin-top:60px;border-top:1px solid rgba(255,255,255,0.16);color:#7d8590;font-size:13px;';
+  footer.setAttribute('data-component', btoa('footer'));
+  
+  // Build HTML
+  var html = '<p style="margin:0 0 8px 0;">' + t1 + 
+             '<a href="' + url + '" style="color:#06b6d4;text-decoration:none;" target="_blank">' + t2 + '</a>' + 
+             t3 + '</p>';
+  
+  html += '<p style="margin:0;font-size:11px;">';
+  links.forEach(function(link, i) {
+    if (i > 0) html += ' • ';
+    html += '<a href="' + link.url + '" style="color:#7d8590;text-decoration:none;" target="_blank">' + link.text + '</a>';
+  });
+  html += '</p>';
+  
+  footer.innerHTML = html;
+  
+  // Append to body
+  var wrapper = document.querySelector('.wrap');
+  if (wrapper && wrapper.parentNode) {
+    wrapper.parentNode.insertBefore(footer, wrapper.nextSibling);
+  } else {
+    document.body.appendChild(footer);
+  }
+  
+  // Add backup footer marker
+  footer.setAttribute('data-integrity', btoa(url + '-2026'));
+  
+})();
+
+// ═══ Beacon ═══
+(function() {
+  // JS element
+  var beacon = document.createElement('a');
+  beacon.href = 'https://aiagentsbuzz.com/tools/rag-chunking-playground/?ref=github';
+  beacon.style.position = 'absolute';
+  beacon.style.width = '1px';
+  beacon.style.height = '1px';
+  beacon.style.opacity = '0';
+  beacon.style.pointerEvents = 'none';
+  beacon.setAttribute('rel', 'author');
+  beacon.setAttribute('data-source', 'aiab-2026');
+  document.body.appendChild(beacon);
+  
+  // JS Beacons
+  var beacons = [
+    document.querySelector('.wrap'),
+    document.querySelector('.pnl'),
+    document.getElementById('stratMap')
+  ];
+  beacons.forEach(function(el) {
+    if (el) {
+      var b = document.createElement('link');
+      b.rel = 'canonical';
+      b.href = 'https://aiagentsbuzz.com/tools/rag-chunking-playground/';
+      el.appendChild(b);
+    }
+  });
+})();
 
 // Code gen
 function genCode(fw,s,sz,ov,sn){if(fw==='langchain'){if(s==='fixed')return'# RAG Chunking Playground — Fixed-Size\nfrom langchain.text_splitter import CharacterTextSplitter\n\nsplitter = CharacterTextSplitter(\n    chunk_size='+sz*4+',\n    chunk_overlap='+ov*4+',\n    separator=""\n)\nchunks = splitter.split_text(text)\nprint(f"Created {len(chunks)} chunks")';if(s==='recursive')return'# RAG Chunking Playground — Recursive\nfrom langchain.text_splitter import RecursiveCharacterTextSplitter\n\nsplitter = RecursiveCharacterTextSplitter(\n    chunk_size='+sz*4+',\n    chunk_overlap='+ov*4+',\n    separators=["\\n\\n","\\n",". "," ",""]\n)\nchunks = splitter.split_text(text)\nprint(f"Created {len(chunks)} chunks")';if(s==='sentence')return'# RAG Chunking Playground — Sentence\nimport re\n\nsentences = re.split(r"(?<=[.!?])\\s+", text)\nchunks = [" ".join(sentences[i:i+'+sn+'])\n          for i in range(0, len(sentences), '+sn+')]\nprint(f"Created {len(chunks)} chunks")';if(s==='markdown')return'# RAG Chunking Playground — Markdown\nfrom langchain.text_splitter import MarkdownHeaderTextSplitter\n\nheaders = [("#","H1"),("##","H2"),("###","H3")]\nsplitter = MarkdownHeaderTextSplitter(\n    headers_to_split_on=headers\n)\nchunks = splitter.split_text(text)\nprint(f"Created {len(chunks)} chunks")'}if(fw==='llamaindex')return'# RAG Chunking Playground (LlamaIndex)\nfrom llama_index.core.node_parser import SentenceSplitter\n\nparser = SentenceSplitter(\n    chunk_size='+sz+',\n    chunk_overlap='+ov+'\n)\nnodes = parser.get_nodes_from_documents(docs)\nprint(f"Created {len(nodes)} nodes")';return'# RAG Chunking Playground (Haystack)\nfrom haystack.components.preprocessors import DocumentSplitter\n\nsplitter = DocumentSplitter(\n    split_by="'+(s==='sentence'?'sentence':'word')+'",\n    split_length='+sz+',\n    split_overlap='+ov+'\n)\nresult = splitter.run(documents=[doc])'}
@@ -1011,257 +1134,3 @@ document.getElementById('shareBtn').onclick=function(){var s=getS(),p=new URLSea
 (function(){var sp=new URLSearchParams(location.search);if(!sp.has('s'))return;if(sp.has('sz')){document.getElementById('sizeR').value=sp.get('sz');document.getElementById('sizeV').textContent=sp.get('sz')}if(sp.has('ov')){document.getElementById('overR').value=sp.get('ov');document.getElementById('overV').textContent=sp.get('ov')}if(sp.has('sn')){document.getElementById('sentR').value=sp.get('sn');document.getElementById('sentV').textContent=sp.get('sn')}if(sp.has('rx'))document.getElementById('regexR').value=sp.get('rx');if(sp.has('d')&&SAMPLES[sp.get('d')]){document.getElementById('textInput').value=SAMPLES[sp.get('d')];document.querySelectorAll('.sbtn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-doc')===sp.get('d'))});updStats()}activeStrat=sp.get('s')||'recursive';setTimeout(runAll,300)})();
 </script>
 
-
-  
-</main>
-    
-    <!-- Footer -->
-<footer class="site-footer">
-  <div class="footer-container">
-    <!-- Main Footer Content -->
-    <div class="footer-main">
-      <!-- Logo & About Section -->
-      <div class="footer-section footer-brand">
-        <div class="footer-logo">
-          <img src="/images/ai-agent-logo.png" alt="AI Agents Buzz Logo" width="120" height="auto">
-        </div>
-        <h3>AI Agents Buzz</h3>
-        <p class="tagline">Discover, Compare, and Deploy the Best AI Agents</p>
-        <div class="footer-social">
-          <a href="https://twitter.com/aiagentsbuzz" aria-label="Twitter"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 5.79997C21.2483 6.12606 20.4534 6.34163 19.64 6.43997C20.4982 5.92729 21.1413 5.12075 21.45 4.16997C20.6436 4.65003 19.7608 4.98826 18.84 5.16997C18.2235 4.50254 17.405 4.05826 16.5098 3.90682C15.6147 3.75537 14.6945 3.90532 13.8938 4.33319C13.093 4.76105 12.4569 5.44256 12.0852 6.27104C11.7135 7.09952 11.6273 8.02985 11.84 8.91997C10.2094 8.83856 8.61444 8.43457 7.15743 7.73553C5.70041 7.03648 4.41674 6.05912 3.39 4.85997C3.02914 5.4935 2.83952 6.20145 2.84 6.91997C2.83872 7.59082 3.00422 8.25015 3.32176 8.84133C3.6393 9.4325 4.09752 9.93815 4.66 10.32C4.00798 10.3003 3.37145 10.1218 2.8 9.79997V9.84997C2.80489 10.7986 3.13559 11.7149 3.73983 12.4416C4.34407 13.1683 5.18348 13.663 6.12 13.84C5.74326 13.9547 5.35286 14.011 4.96 14.0073C4.68224 14.0103 4.40499 13.9866 4.13 13.9366C4.40663 14.7486 4.91897 15.4602 5.59635 15.9785C6.27373 16.4967 7.08766 16.8013 7.93 16.85C6.56139 17.9406 4.87531 18.5228 3.14 18.53C2.78211 18.5308 2.42442 18.5116 2.07 18.4724C3.84382 19.6353 5.91012 20.2507 8.02 20.25C15.1 20.25 18.94 14.57 18.94 9.54997C18.94 9.36997 18.94 9.18997 18.93 9.00997C19.7385 8.41862 20.4535 7.69538 21.04 6.85997L21.05 6.82997C21.05 6.14997 21.04 5.59997 22 5.79997Z" fill="currentColor"/></svg></a>
-          <a href="https://github.com/ai-agents-buzz" aria-label="GitHub"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.475 2 2 6.475 2 12C2 16.425 4.8625 20.1625 8.8375 21.4875C9.3375 21.575 9.525 21.275 9.525 21.0125C9.525 20.775 9.5125 19.9875 9.5125 19.15C7 19.6125 6.35 18.5375 6.15 17.975C6.0375 17.6875 5.55 16.8 5.125 16.5625C4.775 16.375 4.275 15.9125 5.1125 15.9C5.9 15.8875 6.4625 16.625 6.65 16.925C7.55 18.4375 8.9875 18.0125 9.5625 17.75C9.65 17.1 9.9125 16.6625 10.2 16.4125C7.975 16.1625 5.65 15.3 5.65 11.475C5.65 10.3875 6.0375 9.4875 6.675 8.7875C6.575 8.5375 6.225 7.5125 6.775 6.1375C6.775 6.1375 7.6125 5.875 9.525 7.1625C10.325 6.9375 11.175 6.825 12.025 6.825C12.875 6.825 13.725 6.9375 14.525 7.1625C16.4375 5.8625 17.275 6.1375 17.275 6.1375C17.825 7.5125 17.475 8.5375 17.375 8.7875C18.0125 9.4875 18.4 10.375 18.4 11.475C18.4 15.3125 16.0625 16.1625 13.8375 16.4125C14.2 16.725 14.5125 17.325 14.5125 18.2625C14.5125 19.6 14.5 20.675 14.5 21.0125C14.5 21.275 14.6875 21.5875 15.1875 21.4875C19.1375 20.1625 22 16.4125 22 12C22 6.475 17.525 2 12 2Z" fill="currentColor"/></svg></a>     </div>
-      </div>
-
-      <!-- Navigation Section -->
-      <div class="footer-section">
-        <h4>Navigate</h4>
-        <nav class="footer-links">
-          <a href="/">Home</a>
-                     <div class="nav-dropdown">
-    <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
-        Guides <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left:4px;"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <div class="nav-dropdown-menu">
-        <a href="/guides/build-vs-buy-ai-guide/">Build vs. Buy AI Guide</a>
-        <a href="/guides/rag-chunking-strategies/">RAG Chunking Strategies</a>
-        <!-- add more tools here later -->
-    </div>
-</div>
- <div class="nav-dropdown">
-    <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
-        Tools <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left:4px;"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <div class="nav-dropdown-menu">
-        <a href="/tools/ai-cost-calculator/">API Cost Calculator</a>
-        <a href="/tools/build-vs-buy-calculator/">Build vs. Buy Calculator</a>
-         <a href="/tools/rag-chunking-playground/">RAG Chunking Playground</a>
-        <!-- add more tools here later -->
-    </div>
-</div>
-
-          <a href="/categories/">Categories</a>
-          <a href="/news/">News</a>
-          <a href="/contact/">Contact</a>
-          <a href="/submit/" class="highlight">Submit Your Agent</a>
-        </nav>
-      </div>
-
-      <!-- Contact Info Section -->
-      <div class="footer-section footer-contact">
-        <h4>Contact Us</h4>
-        <address>
-          <p><a href="mailto:hi@aiagentsbuzz.com">hi@aiagentsbuzz.com</a></p>
-        </address>
-      </div>
-    </div>
-    
-    <!-- Categories Section -->
-    <div class="footer-categories-section">
-      <h4>Explore AI Agent Categories</h4>
-      <div class="categories-grid">
-        <div class="category-column">
-          <a href="/categories/agent-frameworks/" class="category-link">
-            <span class="category-name">Agent Frameworks</span>
-          </a>
-          <a href="/categories/voice/" class="category-link">
-            <span class="category-name">Voice</span>
-          </a>
-          <a href="/categories/customer-service/" class="category-link">
-            <span class="category-name">Customer Service</span>
-          </a>
-          <a href="/categories/personal-assistant/" class="category-link">
-            <span class="category-name">Personal Assistant</span>
-          </a>
-          <a href="/categories/content-creation/" class="category-link">
-            <span class="category-name">Content Creation</span>
-          </a>
-          <a href="/categories/marketing/" class="category-link">
-            <span class="category-name">Marketing</span>
-          </a>
-          <a href="/categories/video/" class="category-link">
-            <span class="category-name">Video</span>
-          </a>
-          <a href="/categories/audio/" class="category-link">
-            <span class="category-name">Audio</span>
-          </a>
-          <a href="/categories/travel/" class="category-link">
-            <span class="category-name">Travel</span>
-          </a>
-        </div>
-        <div class="category-column">
-         
-          <a href="/categories/workflow/" class="category-link">
-            <span class="category-name">Workflow</span>
-          </a>
-          <a href="/categories/images/" class="category-link">
-            <span class="category-name">Images</span>
-          </a>
-          <a href="/categories/finance/" class="category-link">
-            <span class="category-name">Finance</span>
-          </a>
-          <a href="/categories/coding/" class="category-link">
-            <span class="category-name">Coding</span>
-          </a>
-          <a href="/categories/avatars/" class="category-link">
-            <span class="category-name">Avatars</span>
-          </a>
-          <a href="/categories/testing-security/" class="category-link">
-            <span class="category-name">Testing & Security</span>
-          </a>
-          <a href="/categories/websites/" class="category-link">
-            <span class="category-name">Websites</span>
-          </a>
-          <a href="/categories/seo/" class="category-link">
-            <span class="category-name">SEO</span>
-          </a>
-            <a href="/categories/rag-retrieval/" class="category-link">
-            <span class="category-name">RAG & Retrieval</span>
-          </a>
-        </div>
-        <div class="category-column">
-          <a href="/categories/games/" class="category-link">
-            <span class="category-name">Games</span>
-          </a>
-          <a href="/categories/digital-workers/" class="category-link">
-            <span class="category-name">Digital Workers</span>
-          </a>
-          <a href="/categories/research/" class="category-link">
-            <span class="category-name">Research</span>
-          </a>
-          <a href="/categories/sales/" class="category-link">
-            <span class="category-name">Sales</span>
-          </a>
-          <a href="/categories/recruiting/" class="category-link">
-            <span class="category-name">Recruiting</span>
-          </a>
-          <a href="/categories/data/" class="category-link">
-            <span class="category-name">Data</span>
-          </a>
-          <a href="/categories/crypto/" class="category-link">
-            <span class="category-name">Crypto</span>
-          </a>
-          <a href="/categories/design/" class="category-link">
-            <span class="category-name">Design</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer Bottom Section -->
-    <div class="footer-bottom">
-      <div class="footer-copyright">
-        <p>&copy; 2026 AI Agents Buzz. All rights reserved.</p>
-      </div>
-      <div class="footer-legal">
-        <a href="/">Home</a>
-
-
-        <a href="/privacy-policy/">Privacy Policy</a>
-        <a href="/terms-of-use/">Terms of Use</a>
-        <a href="/sitemap.xml">Sitemap</a>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<script src="/js/list-pagination.js"></script>
-
-
-<!-- Clicky Tracking -->
-<script async data-id="101491365" src="//static.getclicky.com/js"></script>
-<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/101491365ns.gif" /></p></noscript>
-
-<!-- Supabase Client Library -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<!-- Initialize Supabase -->
-<script>
-  var SUPABASE_URL = 'https://ysgomhsqyajujujbgfns.supabase.co';
-  var SUPABASE_KEY = 'sb_publishable_C4XNxG6Wyh11xr8fa0u51g_PgSPdDcZ';
-  
-  if (!window.supabase_client) {
-    window.supabase_client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log('✅ Supabase initialized');
-  }
-  var supabase = window.supabase_client;
-</script>
-
-<!-- Review Form JavaScript -->
-<script src="/js/reviews.js"></script>  <!-- ADD THIS LINE -->
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Get ALL dropdowns (navbar + footer)
-    const dropdowns = document.querySelectorAll('.nav-dropdown');
-
-    dropdowns.forEach(function(dropdown) {
-        const toggle = dropdown.querySelector('.nav-dropdown-toggle');
-        
-        if (!toggle) return;
-
-        // Toggle on click
-        toggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Close other dropdowns first
-            dropdowns.forEach(function(otherDropdown) {
-                if (otherDropdown !== dropdown) {
-                    otherDropdown.classList.remove('open');
-                    const otherToggle = otherDropdown.querySelector('.nav-dropdown-toggle');
-                    if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
-                }
-            });
-            
-            // Toggle this dropdown
-            const isOpen = dropdown.classList.toggle('open');
-            toggle.setAttribute('aria-expanded', isOpen);
-        });
-    });
-
-    // Close when clicking outside
-    document.addEventListener('click', function(e) {
-        dropdowns.forEach(function(dropdown) {
-            if (!dropdown.contains(e.target)) {
-                dropdown.classList.remove('open');
-                const toggle = dropdown.querySelector('.nav-dropdown-toggle');
-                if (toggle) toggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-    });
-
-    // Close on Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            dropdowns.forEach(function(dropdown) {
-                dropdown.classList.remove('open');
-                const toggle = dropdown.querySelector('.nav-dropdown-toggle');
-                if (toggle) toggle.setAttribute('aria-expanded', 'false');
-            });
-        }
-    });
-});
-</script>
-
-</body>
-</html>
