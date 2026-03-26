@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en" class="side-bg-fix">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"><meta name="description" content="Free interactive RAG chunking tool: compare fixed-size, recursive, sentence, markdown, regex and semantic chunking side by side. Visualize chunk quality with green/yellow/red grading, see token counts and embedding costs, and export code for LangChain, LlamaIndex, and Haystack."><title>RAG Chunking Playground: Compare 6 Strategies Side by Side (Free Tool)</title><link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="canonical" href="https://aiagentsbuzz.com/tools/rag-chunking-playground/">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Monda:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AI Agents Buzz",
+  "url": "https://aiagentsbuzz.com",
+  "copyrightYear": "2025",
+  "copyrightHolder": {
+    "@type": "Organization",
+    "name": "AI Agents Buzz"
+  }
+}
+</script>
+  
+<meta property="og:title" content="RAG Chunking Playground: Compare 6 Strategies Side by Side (Free Tool)">
+<meta property="og:description" content="Free interactive RAG chunking tool: compare fixed-size, recursive, sentence, markdown, regex and semantic chunking side by side. Visualize chunk quality with green/yellow/red grading, see token counts and embedding costs, and export code for LangChain, LlamaIndex, and Haystack.">
+<meta property="og:url" content="https://aiagentsbuzz.com/tools/rag-chunking-playground/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://aiagentsbuzz.com/images/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RAG Chunking Playground: Compare 6 Strategies Side by Side (Free Tool)">
+<meta name="twitter:description" content="Free interactive RAG chunking tool: compare fixed-size, recursive, sentence, markdown, regex and semantic chunking side by side. Visualize chunk quality with green/yellow/red grading, see token counts and embedding costs, and export code for LangChain, LlamaIndex, and Haystack.">
+<meta name="twitter:image" content="https://aiagentsbuzz.com/images/og-default.png">
+
+<script type="module" integrity="sha512-I1nWw2KfQnK/t/zOlALFhLrZA1yzsCzBl7DxamXdg/QF7kq+O4sYBZLl0DFCE7vP2ixPccL/k0/oqvhyDB73zQ==" src="/.11ty/reload-client.js"></script></head>
+
+
+<style>
+.share-float {
+  position: fixed;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 50;
+}
+.share-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #33383c;
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: #6b7280;
+}
+.share-btn:hover {
+  border-color: rgba(6,182,212,0.3);
+  color: #e1e7ef;
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(6,182,212,0.15);
+}
+.share-btn svg {
+  width: 16px;
+  height: 16px;
+}
+/* Hide on small screens — not enough space */
+@media(max-width: 1100px) {
+  .share-float { display: none; }
+}
+</style>
+
+<div class="share-float">
+  <!-- Twitter/X -->
+  <a class="share-btn" id="shareTwitter" target="_blank" rel="noopener" aria-label="Share on X">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+  </a>
+  <!-- LinkedIn -->
+  <a class="share-btn" id="shareLinkedIn" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+</div>
+
+<script>
+// Auto-populate share URLs from current page
+(function(){
+  var url = encodeURIComponent(window.location.href);
+  var title = encodeURIComponent(document.title);
+  
+  var tw = document.getElementById('shareTwitter');
+  if(tw) tw.href = 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+  
+ var li = document.getElementById('shareLinkedIn');
+if(li) li.href = 'https://www.linkedin.com/feed/?shareActive=true&text=' + encodeURIComponent(document.title + ' ' + window.location.href);
+})();
+</script>
+<body>
+<nav>
+    <div class="logo"><a href="/"><img src="/images/ai-agent-logo.png" alt="AI Agents Buzz Logo" width="120" height="auto"></a><br>AI Agent Directory</div>
+    <button class="mobile-menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <div class="nav-dropdown">
+    <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+        Guides <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left:4px;"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="nav-dropdown-menu">
+        <a href="/guides/build-vs-buy-ai-guide/">Build vs. Buy AI Guide</a>
+        <a href="/guides/rag-chunking-strategies/">RAG Chunking Strategies</a>
+        <!-- add more tools here later -->
+    </div>
+</div>
+        <div class="nav-dropdown">
+    <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+        Tools <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left:4px;"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="nav-dropdown-menu">
+        <a href="/tools/ai-cost-calculator/">API Cost Calculator</a>
+        <a href="/tools/build-vs-buy-calculator/">Build vs. Buy Calculator</a>
+        <a href="/tools/rag-chunking-playground/">RAG Chunking Playground</a>
+        <!-- add more tools here later -->
+    </div>
+</div>
+        <a href="/categories/">Categories</a>
+        <a href="/news/">News</a>
+        <a href="/contact/">Contact</a>
+        <a href="/submit/" class="submit-button">Submit Your Agent</a>
+    </div>
+</nav>
+   <main>
+
+        
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:#4b5257;font-family:'DM Sans',system-ui,sans-serif;color:#e6edf3;min-height:100vh;overflow-x:hidden}
+:root{
+  --bg:#4b5257;--pnl:rgb(16, 20, 25);--bdr:rgba(255,255,255,0.16);--bdr-h:rgba(6,182,212,0.25);
+  --teal:#06b6d4;--amber:#f59e0b;--purple:#a78bfa;
+  --t1:#e6edf3;--t2:#7d8590;--t3:#484f58;
+  --code:'Fira Code','SF Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+  /* NEON grade colors — electric vivid */
+  --neon-g:#00ff66;--neon-y:#ffff00;--neon-r:#ff0044;
+  --neon-g-bg:rgba(0,255,102,0.08);--neon-g-bdr:rgba(0,255,102,0.25);
+  --neon-y-bg:rgba(255,255,0,0.08);--neon-y-bdr:rgba(255,255,0,0.25);
+  --neon-r-bg:rgba(255,0,68,0.08);--neon-r-bdr:rgba(255,0,68,0.25);
+}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(6,182,212,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.025) 1px,transparent 1px);background-size:40px 40px}
+.bg-g1{position:fixed;top:-20%;right:-10%;width:800px;height:800px;z-index:0;pointer-events:none;background:radial-gradient(circle,rgba(6,182,212,0.035) 0%,transparent 60%)}
+.wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:24px 10px 60px; background:rgb(0, 0, 0);}
+
+/* Header */
+.hdr{text-align:center;margin-bottom:22px;animation:fi .5s ease-out}
+@keyframes fi{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.pill{display:inline-block;padding:4px 14px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+h1{font-size:clamp(22px,3.5vw,34px);font-weight:800;letter-spacing:-1px;margin:6px 0 8px;line-height:1.15;background:linear-gradient(135deg,rgb(255, 255, 255) 0%, #22d3ee 50%, #0891b2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{color:var(--t2);font-size:12px;max-width:700px;margin:0 auto;line-height:1.5}.sub a{color:var(--teal);text-decoration:none}
+.pnl{background:var(--pnl);border:1px solid var(--bdr);border-radius:10px;padding:16px;margin-bottom:12px}
+
+/* Input layout 3/4 + 1/4 */
+.input-layout{display:flex;gap:14px}
+@media(max-width:800px){.input-layout{flex-direction:column}}
+.input-left{flex:3;min-width:0}
+.input-right{flex:1;min-width:180px;display:flex;flex-direction:column;gap:8px}
+.input-right .ctrl-item{display:flex;flex-direction:column;gap:4px}
+.input-right .ctrl-row{display:flex;align-items:center;gap:8px}
+.input-right .ctrl-row input[type=range]{flex:1;width:auto}
+.go-btn-wrap{margin-top:auto;padding-top:6px}
+
+textarea{width:100%;height:180px;background:rgba(0,0,0,0.3);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-family:var(--code);font-size:11px;line-height:1.6;padding:12px;resize:vertical;outline:none;transition:border-color .2s}
+textarea:focus{border-color:var(--teal)}textarea::placeholder{color:var(--t3)}
+.input-bar{display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:8px}
+.sample-btns{display:flex;gap:4px;flex-wrap:wrap}
+.sbtn{padding:5px 10px;border-radius:6px;font-size:10px;font-weight:600;border:1px solid var(--bdr);background:transparent;color:var(--t2);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.sbtn:hover{border-color:var(--bdr-h);color:var(--t1)}.sbtn.active{border-color:var(--teal);color:var(--teal);background:rgba(6,182,212,0.06)}
+.input-stats{font-size:10px;color:var(--t2);font-family:var(--code)}.input-stats strong{color:var(--teal)}
+.input-warn{color:var(--amber);font-size:10px;display:none}
+.go-btn{padding:10px 28px;border:none;border-radius:8px;background:linear-gradient(135deg,#06b6d4,#0891b2);color:#fff;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.3px;width:60%}
+.go-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(6,182,212,0.25)}
+.file-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+.file-btn{padding:5px 12px;border-radius:6px;font-size:10px;font-weight:600;border:1px solid var(--bdr);background:transparent;color:var(--t2);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.file-btn:hover{border-color:var(--bdr-h);color:var(--t1)}
+#fileInput{display:none}
+.file-name{font-size:10px;color:var(--t2);font-family:var(--code)}
+.cl{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t2)}
+.cv{font-family:var(--code);font-size:11px;color:var(--teal);font-weight:600;min-width:30px;text-align:right}
+input[type=range]{flex:1;height:3px;-webkit-appearance:none;appearance:none;background:rgba(6,182,212,0.12);border-radius:2px;outline:none;min-width:40px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--teal);cursor:pointer;box-shadow:0 0 6px rgba(6,182,212,0.4)}
+
+/* ======================== */
+/* CHUNK MAP                 */
+/* ======================== */
+.map-hdr{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-bottom:12px}
+.srow{display:flex;align-items:center;gap:10px;padding:5px 4px;margin-bottom:4px;border-radius:6px;cursor:pointer;transition:background .15s;position:relative;overflow:visible}
+.srow:hover{background:rgba(255,255,255,0.1);z-index:10}.srow.active-row{background:rgba(6,182,212,0.1)}
+.srow-label{width:82px;flex-shrink:0;display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700}
+.srow-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--teal);box-shadow:0 0 5px var(--teal)}
+.srow-name{color:var(--t1);font-size:13px}
+
+.cbar{flex:1;display:flex;height:28px;gap:2px;align-items:stretch;min-width:0;border-radius:4px;position:relative}
+.cblk{display:flex;align-items:center;justify-content:center;font-family:var(--code);font-size:8px;font-weight:600;border-radius:3px;cursor:pointer;transition:all .2s ease;position:relative;min-width:2px;color:rgba(255,255,255,0.5);overflow:visible}
+.cblk:hover{transform:scaleY(1.2);z-index:20;color:rgba(255,255,255,0.9)}
+.cblk.hl-active{transform:scaleY(1.15);color:rgba(255,255,255,0.95);z-index:15}
+
+/* Map blocks: teal shading by size */
+.cblk-s1{background:#091e22;border:1px solid #0d2e35}
+.cblk-s2{background:#0c3d48;border:1px solid #10505e}
+.cblk-s3{background:#0e6e82;border:1px solid #1284a0}
+.cblk-s4{background:#08b5d4;border:1px solid #22d3ee}
+.cblk-s5{background:#3de8ff;border:1px solid #6af0ff}
+.cblk:hover,.cblk.hl-active{box-shadow:0 0 8px rgba(6,182,212,0.4)}
+
+.srow-stats{width:130px;flex-shrink:0;display:flex;gap:8px;font-family:var(--code);font-size:11px}
+.ss-c{color:var(--t1);font-weight:600}.ss-a{color:var(--amber);font-weight:600}
+.srow-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0}
+.badge-g{background:rgba(0,255,102,0.1);color:var(--neon-g);border:1px solid rgba(0,255,102,0.2)}
+.badge-y{background:rgba(255,255,0,0.1);color:var(--neon-y);border:1px solid rgba(255,255,0,0.2)}
+.badge-r{background:rgba(53, 18, 27, 0.1);color:var(--neon-r);border:1px solid rgba(255,0,68,0.2)}
+.badge-ai{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.15)}
+
+/* TOOLTIP — pops RIGHT, grade-tinted bg */
+.ttip{display:none;position:absolute;top:50%;left:calc(100% + 10px);transform:translateY(-50%);border-radius:8px;padding:10px 14px;font-family:var(--code);font-size:9px;z-index:100;box-shadow:0 8px 30px rgba(0,0,0,0.6);color:var(--t1);pointer-events:none;min-width:220px;max-width:300px;white-space:normal;line-height:1.5}
+.cblk:hover .ttip{display:block}
+.ttip-g{background:rgba(10,28,16,0.96);border:4px solid rgba(0,255,102,0.35)}
+.ttip-y{background:rgba(28,26,8,0.96);border:4px solid rgba(255,255,0,0.3)}
+.ttip-r{background:rgba(32,8,14,0.96);border:4px solid rgba(255,0,68,0.35)}
+
+.ttip-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.ttip-id{font-weight:700;font-size:10px}
+.ttip-grade{font-size:8px;font-weight:700;padding:3px 10px;border-radius:6px;letter-spacing:.5px;text-transform:uppercase}
+.ttip-grade-g{background:rgba(0,255,102,0.2);color:var(--neon-g)}
+.ttip-grade-y{background:rgba(255,255,0,0.2);color:var(--neon-y)}
+.ttip-grade-r{background:rgba(255,0,68,0.2);color:var(--neon-r)}
+.ttip-tokens{font-size:11px;font-weight:700;color:var(--teal);margin-bottom:6px}
+.ttip-type{font-size:8px;color:var(--t2);margin-bottom:6px;font-style:italic}
+.ttip-sig{display:flex;align-items:flex-start;gap:5px;margin-bottom:3px;font-size:9px;line-height:1.3}
+.sig-icon{flex-shrink:0;font-size:10px;width:14px;text-align:center}
+.sig-good{color:var(--neon-g)}.sig-warn{color:var(--neon-y)}.sig-error{color:var(--neon-r)}
+.sig-text{color:var(--t1);font-weight:600}.sig-detail{color:var(--t2);font-weight:400}
+.ttip-bnd{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06);font-size:8px}
+.bnd-label{color:var(--t2);margin-bottom:2px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.bnd-text{color:var(--t2)}.bnd-cut{color:var(--neon-r);font-weight:700;font-size:10px}.bnd-clean{color:var(--neon-g)}
+.ttip-density{margin-top:4px;display:flex;align-items:center;gap:6px}
+.density-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.density-fill{height:100%;border-radius:2px;transition:width .3s}
+.density-low{background:var(--neon-r)}.density-med{background:var(--neon-y)}.density-high{background:var(--neon-g)}
+.density-val{font-size:8px;color:var(--t2);min-width:28px;text-align:right}
+.ttip-kw{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06)}
+.kw-tag{display:inline-block;padding:1px 6px;margin:1px 2px;border-radius:4px;font-size:8px;background:rgba(6,182,212,0.08);color:var(--teal);border:1px solid rgba(6,182,212,0.12)}
+
+/* ======================== */
+/* DOCUMENT VIEWER           */
+/* ======================== */
+.main{display:flex;gap:12px}@media(max-width:900px){.main{flex-direction:column}}
+.doc{flex:1;min-width:0;max-height:800px;overflow-y:auto}
+.doc::-webkit-scrollbar{width:3px}.doc::-webkit-scrollbar-thumb{background:rgba(6,182,212,0.12);border-radius:2px}
+.doc-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;position:sticky;
+        top:-16px;z-index:5;background:var(--pnl);padding:16px 0 10px;border-bottom:3px solid var(--bdr);margin-top:-16px}
+.doc-label{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2)}
+.doc-strat{color:var(--teal);font-weight:800;font-size:13px}
+.view-toggle{display:flex;gap:2px}
+.vt-btn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;border:2px solid var(--bdr);background:transparent;color:var(--t2);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.vt-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(6,182,212,0.06)}
+.doc-text{font-family:var(--code);font-size:12px;line-height:2;color:#c0c8d4;white-space:pre-wrap;word-wrap:break-word;text-align:left}
+
+/* Inline highlights — neon green/yellow/red */
+.hl{border-radius:3px;padding:1px 2px;transition:all .3s ease;cursor:default}
+.hl-g-even{background:rgba(0,255,102,0.07);border-bottom:2px solid rgba(0,255,102,0.3);box-shadow:0 0 4px rgba(0,255,102,0.06)}
+.hl-g-odd{background:rgba(0,255,102,0.12);border-bottom:2px solid rgba(0,255,102,0.45);box-shadow:0 0 6px rgba(0,255,102,0.1)}
+.hl-y-even{background:rgba(255,255,0,0.06);border-bottom:2px solid rgba(255,255,0,0.25);box-shadow:0 0 4px rgba(255,255,0,0.05)}
+.hl-y-odd{background:rgba(255,255,0,0.10);border-bottom:2px solid rgba(255,255,0,0.4);box-shadow:0 0 6px rgba(255,255,0,0.08)}
+.hl-r-even{background:rgba(255,0,68,0.07);border-bottom:2px solid rgba(255,0,68,0.3);box-shadow:0 0 4px rgba(255,0,68,0.06)}
+.hl-r-odd{background:rgba(255,0,68,0.12);border-bottom:2px solid rgba(255,0,68,0.45);box-shadow:0 0 6px rgba(255,0,68,0.1)}
+
+/* GLOW on hover — grade colored, BRIGHT */
+.hl.glow-g{box-shadow:0 0 28px rgba(0,255,102,0.1),0 0 56px rgba(0,255,102,0.1)!important;border-bottom-color:rgba(0,255,102,1)!important;background:rgba(0,255,102,0.1)!important;color:#fff!important}
+.hl.glow-y{box-shadow:0 0 28px rgba(255,255,0,0.1),0 0 56px rgba(255,255,0,0.1)!important;border-bottom-color:rgba(255,255,0,1)!important;background:rgba(255,255,0,0.1)!important;color:#fff!important}
+.hl.glow-r{box-shadow:0 0 28px rgba(255,0,68,0.1),0 0 56px rgba(255,0,68,0.1)!important;border-bottom-color:rgba(255,0,68,1)!important;background:rgba(255,0,68,0.1)!important;color:#fff!important}
+.doc-text.dimmed .hl:not(.glow-g):not(.glow-y):not(.glow-r){opacity:.35;box-shadow:none;border-bottom-color:transparent}
+
+/* Chunk badge */
+.cbg{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:10px;font-family:var(--code);font-size:7px;font-weight:800;padding:0 4px;margin:0 3px;vertical-align:middle}
+.cbg-g{background:rgba(0,255,102,0.15);color:var(--neon-g)}.cbg-y{background:rgba(255,255,0,0.15);color:var(--neon-y)}.cbg-r{background:rgba(255,0,68,0.15);color:var(--neon-r)}
+
+/* Cards view */
+.chunk-cards{display:none;flex-direction:column;gap:6px}.chunk-cards.show{display:flex}
+.doc-text.hide{display:none}
+.ccard{border-radius:8px;padding:12px;font-family:var(--code);font-size:11px;line-height:1.7;color:#c0c8d4;position:relative;transition:all .2s;cursor:default}
+.ccard-g{background:var(--neon-g-bg);border-left:3px solid var(--neon-g)}
+.ccard-y{background:var(--neon-y-bg);border-left:3px solid var(--neon-y)}
+.ccard-r{background:var(--neon-r-bg);border-left:3px solid var(--neon-r)}
+.ccard:hover{transform:translateX(3px)}
+.ccard-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:9px}
+.ccard-id{font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.ccard-id-g{color:var(--neon-g)}.ccard-id-y{color:var(--neon-y)}.ccard-id-r{color:var(--neon-r)}
+.ccard-meta{color:var(--t2);display:flex;gap:10px}.ccard-meta strong{color:var(--t1)}
+.ccard-signals{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.ccard-sig{font-size:8px;font-weight:600;padding:2px 6px;border-radius:4px}
+.csig-g{background:rgba(0,255,102,0.08);color:var(--neon-g)}.csig-y{background:rgba(255,255,0,0.08);color:var(--neon-y)}.csig-r{background:rgba(255,0,68,0.08);color:var(--neon-r)}
+
+/* ======================== */
+/* STATS PANEL               */
+/* ======================== */
+.stats{width:200px;flex-shrink:0;position:sticky;top:20px;height:fit-content}
+@media(max-width:900px){.stats{width:100%;position:static}}
+.st-title{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-bottom:10px}
+.st-item{margin-bottom:12px}.st-item:last-child{margin-bottom:0}
+.st-val{font-family:var(--code);font-size:20px;font-weight:700;color:var(--teal);line-height:1}
+.st-val.amber{color:var(--amber)}
+.st-lbl{font-size:8px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t2);margin-top:3px}
+.grade-row{display:flex;gap:6px;margin-top:8px}
+.grade-pill{flex:1;text-align:center;padding:4px;border-radius:6px;font-size:9px;font-weight:700}
+.gp-g{background:rgba(0,255,102,0.08);color:var(--neon-g)}.gp-y{background:rgba(255,255,0,0.08);color:var(--neon-y)}.gp-r{background:rgba(255,0,68,0.08);color:var(--neon-r)}
+.ct{width:100%;margin-top:8px}.ct td{padding:3px 0;font-size:9px;border-bottom:1px solid rgba(255,255,255,0.02)}
+.ct-n{color:var(--t2)}.ct-p{font-family:var(--code);color:var(--neon-g);font-weight:600;text-align:right}
+.alert{padding:6px 8px;border-radius:6px;font-size:9px;font-weight:600;margin-top:6px;line-height:1.3}
+.alert-ok{background:var(--neon-g-bg);color:var(--neon-g);border:1px solid var(--neon-g-bdr)}
+.alert-warn{background:var(--neon-y-bg);color:var(--neon-y);border:1px solid var(--neon-y-bdr)}
+.alert-err{background:var(--neon-r-bg);color:var(--neon-r);border:1px solid var(--neon-r-bdr)}
+.acts{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.abtn{flex:1;min-width:60px;padding:6px;border-radius:6px;font-size:9px;font-weight:600;text-align:center;border:1px solid;cursor:pointer;font-family:var(--sans);transition:all .15s}
+.abtn-p{background:rgba(6,182,212,0.06);border-color:rgba(6,182,212,0.2);color:var(--teal)}.abtn-p:hover{background:rgba(6,182,212,0.12)}
+.abtn-s{background:transparent;border-color:var(--bdr);color:var(--t2)}.abtn-s:hover{border-color:var(--bdr-h);color:var(--t1)}
+
+/* Code export */
+.code-section{display:none;margin-top:12px}.code-section.show{display:block}
+.code-tabs{display:flex;gap:2px}.ctab{padding:5px 12px;border-radius:6px 6px 0 0;font-size:9px;font-weight:600;border:1px solid var(--bdr);border-bottom:none;background:transparent;color:var(--t2);cursor:pointer;font-family:var(--sans)}.ctab.active{background:var(--pnl);color:var(--teal);border-color:rgba(6,182,212,0.15)}
+.code-box{background:#080b10;border:1px solid rgba(6,182,212,0.08);border-radius:0 8px 8px 8px;padding:14px;font-family:var(--code);font-size:10px;line-height:1.7;color:var(--t2);overflow-x:auto;white-space:pre;position:relative}
+.code-box .kw{color:var(--teal)}.code-box .str{color:var(--amber)}.code-box .num{color:var(--neon-g)}.code-box .cm{color:var(--t3)}
+.copy-btn{position:absolute;top:8px;right:8px;padding:3px 8px;border-radius:4px;font-size:8px;font-weight:600;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.15);color:var(--teal);cursor:pointer;font-family:var(--sans)}
+.results{display:none}.results.show{display:block}
+.ft{text-align:center;padding:20px 0 0;font-size:10px;color:var(--t3);margin-top:16px;border-top:1px solid var(--bdr)}.ft a{color:var(--teal);text-decoration:none}
+.gh-link{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--bdr);border-radius:6px;font-size:10px;font-weight:600;color:var(--t2);text-decoration:none;transition:all .15s;margin-top:8px}.gh-link:hover{border-color:var(--bdr-h);color:var(--t1)}
+
+.breadcrumbs {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 8px 20px 0;
+  font-size: 12px;
+  background-color:rgb(0, 0, 0);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+}
+.breadcrumbs a {
+  color: #8b98ab;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.breadcrumbs a:hover {
+  color: #06b6d4;
+}
+.breadcrumbs .bc-sep {
+  color: #4e5d73;
+  font-size: 10px;
+}
+.breadcrumbs .bc-current {
+  color: #c8cdd3;
+  font-weight: 600;
+}
+
+.query-btn {
+  padding: 5px 15px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  height: 42px;
+  align-self: flex-end;
+}
+
+/* ✨ Hover WOW */
+.query-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  box-shadow: 0 8px 18px rgba(217, 119, 6, 0.35);
+}
+
+/* 👇 Optional: Click feedback */
+.query-btn:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 3px 8px rgba(217, 119, 6, 0.25);
+}
+
+.qr-match:hover {
+  box-shadow: 0 0 14px rgba(10, 173, 237, 0.5), 0 0 48px rgba(255, 255, 255, 0.15);
+  background: rgba(227, 226, 224, 0.15) !important;
+  border-color: #22d3ee !important;
+  transform: translateX(4px);
+  cursor: pointer;
+}
+
+
+#queryInput:focus{border-color:#f59e0b;box-shadow:0 0 14px rgba(245,158,11,0.2)}
+
+</style>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-g1"></div>
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+  <a href="/">Home</a>
+  <span class="bc-sep"><span class="bc-sep"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2 1l3 3-3 3" stroke="rgb(126, 127, 130)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+  <a href="/tools/">Tools</a>
+  <span class="bc-sep"><span class="bc-sep"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2 1l3 3-3 3" stroke="rgb(138, 145, 154)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+  <span class="bc-current">RAG Chunking Playground</span>
+</nav>  
+<div class="wrap">
+  
+<div class="hdr">
+  <span class="pill">⬡ Free Chunking Tool</span>
+  <h1>RAG Chunking Playground <br> Visualize & Compare Chunking Strategies
+</h1>
+  <p class="sub">How you split your documents matters more than which embedding model you pick. Paste any text — API docs, legal contracts, README files — and instantly see how fixed-size, recursive, sentence, markdown, regex, and semantic chunking handle it differently. Compare chunk quality, spot mid-word cuts and header orphans, and export production-ready code.</p>
+</div>
+
+<div class="pnl">
+  <div class="input-layout">
+    <div class="input-left">
+      <textarea id="textInput" placeholder="Paste your document here, upload a file, or click a sample below..."></textarea>
+      <div class="file-row">
+        <button class="file-btn" onclick="document.getElementById('fileInput').click()">📁 Upload .txt / .md / .pdf</button>
+        <button class="file-btn" onclick="document.getElementById('textInput').value='';updStats();document.getElementById('results').classList.remove('show');document.getElementById('queryPanel').style.display='none';document.getElementById('queryResults').innerHTML='';document.getElementById('queryInput').value='';document.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('active')});document.getElementById('fileName').textContent='';allChunks={};allAnalysis={}">✕ Clear</button>
+        <input type="file" id="fileInput" accept=".txt,.md,.text,.markdown,.pdf">
+        <span class="file-name" id="fileName"></span>
+      </div>
+      <div class="input-bar">
+        <div class="sample-btns">
+     <button class="sbtn" data-doc="api">OpenAI-style API</button>
+<button class="sbtn" data-doc="legal">GitHub-style Terms</button>
+<button class="sbtn" data-doc="blog">YC Founder Blog</button>
+<button class="sbtn" data-doc="readme">LangChain README</button>
+<button class="sbtn" data-doc="faq">Notion-style FAQ</button>
+        </div>
+        <span class="input-stats" id="inputStats">Paste text or select a sample</span>
+        <span class="input-warn" id="inputWarn"></span>
+      </div>
+    </div>
+    <div class="input-right">
+      <div class="ctrl-item"><span class="cl">Chunk Size (tokens)</span><div class="ctrl-row"><input type="range" id="sizeR" min="100" max="1000" value="400" step="50"><span class="cv" id="sizeV">400</span></div></div>
+      <div class="ctrl-item"><span class="cl">Overlap (tokens)</span><div class="ctrl-row"><input type="range" id="overR" min="0" max="200" value="50" step="10"><span class="cv" id="overV">50</span></div></div>
+      <div class="ctrl-item"><span class="cl">Sentences / Chunk</span><div class="ctrl-row"><input type="range" id="sentR" min="1" max="10" value="3"><span class="cv" id="sentV">3</span></div></div>
+      <div class="ctrl-item"><span class="cl">Regex Pattern</span><input type="text" id="regexR" placeholder="\n## |Q:|---" style="width:100%;padding:6px 8px;background:rgba(0,0,0,0.3);border:1px solid var(--bdr);border-radius:6px;color:var(--t1);font-family:var(--code);font-size:10px;outline:none"></div>
+      <div class="go-btn-wrap"><button class="go-btn" id="goBtn">⬡ Chunk It</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="results" id="results">
+  <div class="pnl" style="padding:16px;overflow:visible"><div class="map-hdr">Chunk Strategy Map — hover blocks for quality analysis</div><div id="stratMap"></div>
+      <!-- Query Simulation -->
+    <div class="pnl" id="queryPanel" style="display:none; border:2px solid rgba(184, 184, 184, 0.3);">
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-bottom:6px">Test a Query — What Would Your RAG Retrieve?</div>
+           <input type="text" id="queryInput" placeholder='Try: "How do I reset my password?" or "What are the rate limits?"' style="width:90%; font-style:italic; padding:10px 14px;background:rgba(0,0,0,0.3);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-family:var(--sans);font-size:13px;outline:none; border:1px solid rgba(245,158,11,0.3);box-shadow:0 0 8px rgba(245,158,11,0.1)">
+        </div>
+         <button class="query-btn" id="queryBtn">Retrieve</button>
+      </div>
+     <div id="queryResults" style="margin-top:12px"></div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="pnl doc" id="docPanel">
+      <div class="doc-hdr"><div class="doc-label">Viewing: <span class="doc-strat" id="docStratLabel">Recursive</span></div><div class="view-toggle"><button class="vt-btn active" id="vtInline">Inline</button><button class="vt-btn" id="vtCards">Cards</button></div></div>
+      <div class="doc-text" id="docText"></div>
+      <div class="chunk-cards" id="chunkCards"></div>
+    </div>
+    <div class="stats" id="statsPanel">
+      <div class="pnl">
+        <div class="st-title" id="stStratName">Recursive</div>
+        <div class="st-item"><div class="st-val" id="stChunks">—</div><div class="st-lbl">Chunks</div></div>
+        <div class="st-item"><div class="st-val amber" id="stAvg">—</div><div class="st-lbl">Avg Tokens</div></div>
+        <div class="st-item"><div class="st-val" id="stTotal">—</div><div class="st-lbl">Total Tokens</div></div>
+        <div class="grade-row" id="gradeRow"></div>
+        <div id="stAlerts"></div>
+      </div>
+      <div class="pnl">
+        <div class="st-title">Embedding Cost</div>
+        <table class="ct" id="costTable"></table>
+        <div class="st-title" style="margin-top:10px">Context Window (5 chunks)</div>
+        <table class="ct" id="ctxTable"></table>
+      </div>
+      <div class="pnl">
+        <div class="acts">
+          <button class="abtn abtn-p" id="codeBtn">Code</button>
+          <button class="abtn abtn-s" id="jsonBtn">{ } JSON</button>
+          <button class="abtn abtn-s" id="shareBtn">Share</button>
+        </div>
+        <span id="copyMsg" style="font-size:9px;color:var(--neon-g);opacity:0;transition:opacity .3s;display:block;text-align:center;margin-top:4px"></span>
+      </div>
+    </div>
+  </div>
+  <div class="code-section show" id="codeSection">
+    <div class="code-tabs"><button class="ctab active" data-fw="langchain">LangChain</button><button class="ctab" data-fw="llamaindex">LlamaIndex</button><button class="ctab" data-fw="haystack">Haystack</button></div>
+    <div class="code-box" id="codeBox"></div>
+  </div>
+  <div style="max-width:800px;margin:20px auto;padding:16px 24px;background:rgba(250,204,21,0.06);border:1px solid rgba(250,204,21,0.2);border-radius:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div>
+    <div style="font-size:14px;font-weight:700;color:#facc15;margin-bottom:3px">Want to understand why these strategies perform differently?</div>
+    <div style="font-size:13px;color:#c8cdd3">Read the companion guide — 2026 benchmarks, chunk size data, and a strategy quiz.</div>
+  </div>
+  <a href="/guides/rag-chunking-strategies/" style="padding:10px 24px;background:linear-gradient(135deg,#facc15,#eab308);color:#1a1f24;font-weight:700;font-size:13px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:all .2s">Read the Guide →</a>
+</div>
+
+</div>
+
+<div class="ft">
+  100% client-side · no text sent to servers · open source<br>
+<!--  <a href="https://github.com/ai-agents-buzz/rag-chunking-playground" target="_blank" class="gh-link"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Star on GitHub</a> -->
+  <div style="margin-top:6px">Built by <a href="https://aiagentsbuzz.com">AI Agents Buzz</a></div>
+</div>
+
+
+</div>
+
+<script>
+// =========================================================================
+// ENGINE
+// =========================================================================
+function estimateTokens(t){return t?Math.ceil(t.length/4):0}
+var STOP_WORDS=new Set(['the','a','an','is','are','was','were','be','been','being','have','has','had','do','does','did','will','would','shall','should','may','might','must','can','could','of','in','to','for','with','on','at','by','from','as','into','through','during','before','after','above','below','between','under','again','further','then','once','here','there','when','where','why','how','all','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','just','about','also','and','but','or','if','while','that','this','it','its','they','them','their','what','which','who','these','those']);
+
+function chunkFixed(text,sz,ov){sz=sz||400;ov=ov||0;var ch=[],chars=sz*4,ovC=ov*4,step=Math.max(chars-ovC,1),p=0;while(p<text.length){var e=Math.min(p+chars,text.length);ch.push({text:text.slice(p,e),start:p,end:e,tokens:estimateTokens(text.slice(p,e)),issues:[]});p+=step;if(p>=text.length)break}return ch}
+
+function chunkRecursive(text,sz,ov){sz=sz||400;ov=ov||50;var mxC=sz*4,ovC=ov*4,seps=['\n\n','\n','. ','! ','? ','; ',', ',' '],ch=[];function sr(txt,sp){if(estimateTokens(txt)<=sz){if(txt.trim())ch.push({text:txt.trim(),start:0,end:0,tokens:estimateTokens(txt.trim()),issues:[]});return}var sep=null;for(var i=0;i<sp.length;i++){if(txt.indexOf(sp[i])!==-1){sep=sp[i];break}}if(!sep){var ck=txt.slice(0,mxC);ch.push({text:ck,start:0,end:0,tokens:estimateTokens(ck),issues:['forced split']});var rem=txt.slice(mxC-ovC);if(rem.trim())sr(rem,sp);return}var pts=txt.split(sep),cur='';for(var j=0;j<pts.length;j++){var pc=pts[j]+(j<pts.length-1?sep:'');if(estimateTokens(cur+pc)>sz&&cur.trim()){ch.push({text:cur.trim(),start:0,end:0,tokens:estimateTokens(cur.trim()),issues:[]});cur=ovC>0&&cur.length>ovC?cur.slice(-ovC)+pc:pc}else cur+=pc}if(cur.trim())ch.push({text:cur.trim(),start:0,end:0,tokens:estimateTokens(cur.trim()),issues:[]})}sr(text,seps);var sp2=0;for(var k=0;k<ch.length;k++){var f=text.indexOf(ch[k].text,sp2);if(f>=0){ch[k].start=f;ch[k].end=f+ch[k].text.length;sp2=f+1}}return ch}
+
+function chunkSentence(text,n){n=n||3;var ch=[],sens=[];var raw=text.replace(/\r\n/g,'\n');var i=0,start=0;while(i<raw.length){var c=raw[i];if(c==='.'||c==='!'||c==='?'){var isSE=false;var af=raw[i+1]||'',af2=raw[i+2]||'';if(c==='!'||c==='?')isSE=true;else if(c==='.'){var bf=i>0?raw[i-1]:'';if(/\d/.test(bf)&&/\d/.test(af))isSE=false;else if(bf.length===1&&/[A-Z]/.test(bf))isSE=false;else if(af===' '&&/[A-Z\"\'\(]/.test(af2))isSE=true;else if(af==='\n'||af==='')isSE=true;else if(af===' '){var rest=raw.slice(i+2,i+20);var fw=rest.match(/^(\S+)/);if(fw&&/^[A-Z]/.test(fw[1]))isSE=true;else if(fw&&/^[a-z]/.test(fw[1]))isSE=false;else isSE=true}}if(isSE){var s=raw.slice(start,i+1).trim();if(s.length>0)sens.push({text:s,start:start,end:i+1});var j=i+1;while(j<raw.length&&(raw[j]===' '||raw[j]==='\n'))j++;start=j;i=j;continue}}else if(c==='\n'&&i+1<raw.length&&raw[i+1]==='\n'){var s2=raw.slice(start,i).trim();if(s2.length>0)sens.push({text:s2,start:start,end:i});var j2=i;while(j2<raw.length&&(raw[j2]==='\n'||raw[j2]===' '))j2++;start=j2;i=j2;continue}i++}var last=raw.slice(start).trim();if(last.length>0)sens.push({text:last,start:start,end:raw.length});for(var k=0;k<sens.length;k+=n){var g=sens.slice(k,k+n),ct=g.map(function(s){return s.text}).join(' ');ch.push({text:ct,start:g[0].start,end:g[g.length-1].end,tokens:estimateTokens(ct),issues:[]})}return ch}
+
+function chunkMarkdown(text,lvl,mx){lvl=lvl||3;mx=mx||800;var ch=[],hr=new RegExp('^#{1,'+lvl+'}\\s+.+$','gm'),hs=[],m;while((m=hr.exec(text))!==null)hs.push({index:m.index,text:m[0].trim()});if(hs.length===0)return chunkRecursive(text,mx/4,0);if(hs[0].index>0){var pre=text.slice(0,hs[0].index).trim();if(pre)ch.push({text:pre,start:0,end:hs[0].index,tokens:estimateTokens(pre),heading:'(Preamble)',issues:[]})}for(var i=0;i<hs.length;i++){var st=hs[i].index,en=(i+1<hs.length)?hs[i+1].index:text.length,sec=text.slice(st,en).trim();if(sec)ch.push({text:sec,start:st,end:en,tokens:estimateTokens(sec),heading:hs[i].text,issues:[]})}return ch}
+
+function chunkRegex(text,pattern){if(!pattern)return[{text:text,start:0,end:text.length,tokens:estimateTokens(text),issues:['no pattern']}];try{var rx=new RegExp(pattern,'g');var ch=[],lastIdx=0,m;while((m=rx.exec(text))!==null){if(m.index>lastIdx){var seg=text.slice(lastIdx,m.index).trim();if(seg)ch.push({text:seg,start:lastIdx,end:m.index,tokens:estimateTokens(seg),issues:[]})}lastIdx=m.index}if(lastIdx<text.length){var last2=text.slice(lastIdx).trim();if(last2)ch.push({text:last2,start:lastIdx,end:text.length,tokens:estimateTokens(last2),issues:[]})}if(ch.length===0)ch.push({text:text,start:0,end:text.length,tokens:estimateTokens(text),issues:['pattern not found']});return ch}catch(e){return[{text:text,start:0,end:text.length,tokens:estimateTokens(text),issues:['invalid regex: '+e.message]}]}}
+
+// =========================================================================
+// ANALYZER
+// =========================================================================
+function analyzeChunkDeep(c,idx,all,fullText){
+  var r={index:idx,tokens:c.tokens,grade:'good',signals:[],keywords:[],chunkType:'',density:0,overlapPct:0,boundaryPreview:null};
+  var text=c.text,avgT=0;if(all.length>0){var tot=0;all.forEach(function(x){tot+=x.tokens});avgT=tot/all.length}
+if(c.tokens<50)r.signals.push({type:'error',text:'Very small',detail:'Lacks context for retrieval'});
+  else if(c.tokens<100)r.signals.push({type:'warn',text:'Small chunk',detail:'May need more context'});
+  else if(c.tokens>800)r.signals.push({type:'error',text:'Very large',detail:'Will dilute retrieval precision'});
+  else if(c.tokens>500)r.signals.push({type:'warn',text:'Large chunk',detail:'Exceeds recommended max'});
+  else r.signals.push({type:'good',text:'Good size',detail:'Within 100-500 sweet spot'});
+  if(avgT>0){var ratio=c.tokens/avgT;if(ratio>2)r.signals.push({type:'warn',text:'Unbalanced',detail:Math.round(ratio*100)+'% of avg'});else if(ratio<.4)r.signals.push({type:'warn',text:'Unbalanced',detail:Math.round(ratio*100)+'% of avg'})}
+  if(c.end<fullText.length){var ca=fullText[c.end]||'',cb=fullText[c.end-1]||'';if(ca&&ca!==' '&&ca!=='\n'&&cb!==' '&&cb!=='\n'){var bs=fullText.slice(Math.max(0,c.end-12),c.end),as=fullText.slice(c.end,Math.min(fullText.length,c.end+12));var bw=bs.split(/\s/).pop(),aw=as.split(/\s/)[0];r.signals.push({type:'error',text:'Mid-word cut',detail:'"'+bw+'|'+aw+'"'});r.boundaryPreview={before:bw,after:aw,type:'word'}}}
+  if(c.end<fullText.length&&c.end>0){var lc=text.trim().slice(-1);if(lc&&!/[.!?\n]/.test(lc)){if(!r.boundaryPreview){var es=text.trim().slice(-25);r.signals.push({type:'warn',text:'Mid-sentence cut',detail:'Ends: "...'+es+'"'});r.boundaryPreview={before:es,after:fullText.slice(c.end,c.end+25).trim(),type:'sentence'}}}else{var hwc=r.signals.some(function(s){return s.text==='Mid-word cut'});if(!hwc)r.signals.push({type:'good',text:'Sentence boundary',detail:'Complete sentence ending'})}}
+  if(idx===0||(c.start>0&&fullText.slice(c.start-2,c.start)==='\n\n'))r.signals.push({type:'good',text:'Paragraph start',detail:'Natural break'});
+  var hm=text.match(/^(#{1,6}\s+.+)$/m);if(hm){var rest=text.slice(text.indexOf(hm[1])+hm[1].length).trim();if(rest.length<20)r.signals.push({type:'error',text:'Header orphaned',detail:'"'+hm[1].slice(0,35)+'"'});else r.signals.push({type:'good',text:'Header + content',detail:'"'+hm[1].slice(0,25)+'"'})}
+  if(idx>0){var pl=all[idx-1].text.trim().split('\n').pop().trim();if(/^#{1,6}\s+/.test(pl))r.signals.push({type:'error',text:'Separated from header',detail:'Prev: "'+pl.slice(0,30)+'"'})}
+  var co=(text.match(/```/g)||[]).length;if(co%2!==0)r.signals.push({type:'error',text:'Code block split',detail:'Unclosed fence'});else if(co>0)r.signals.push({type:'good',text:'Code intact',detail:'All fences closed'});
+  var tl=text.split('\n').filter(function(l){return l.trim().indexOf('|')===0||(l.indexOf('|')!==-1&&l.indexOf('---')!==-1)});
+  if(tl.length>0){var ph=idx>0&&all[idx-1].text.indexOf('|')!==-1;var nh=idx<all.length-1&&all[idx+1]&&all[idx+1].text.indexOf('|')!==-1;if(ph||nh)r.signals.push({type:'error',text:'Table split',detail:'Broken across boundary'});else r.signals.push({type:'good',text:'Table intact',detail:'Contained in chunk'})}
+  var ll=text.split('\n').filter(function(l){return/^\s*[-*•]\s/.test(l.trim())||/^\s*\d+[.)]\s/.test(l.trim())});
+  if(ll.length>0){var lt2=text.trim().split('\n').pop().trim();var ili=/^[-*•]\s/.test(lt2)||/^\d+[.)]\s/.test(lt2);if(ili&&c.end<fullText.length){var nc=fullText.slice(c.end,c.end+20).trim();if(/^[-*•]\s/.test(nc)||/^\d+[.)]\s/.test(nc))r.signals.push({type:'warn',text:'List split',detail:'Continues in next'})}}
+  if(idx>0){var pv=all[idx-1].text.slice(-200),cu=text.slice(0,200),ol=0;for(var ln=Math.min(pv.length,cu.length);ln>10;ln--){if(pv.slice(-ln)===cu.slice(0,ln)){ol=ln;break}}if(ol>0){r.overlapPct=Math.round((estimateTokens(text.slice(0,ol))/c.tokens)*100);if(r.overlapPct>40)r.signals.push({type:'error',text:'Excessive overlap',detail:r.overlapPct+'% duplicate'});else if(r.overlapPct>20)r.signals.push({type:'warn',text:'High overlap',detail:r.overlapPct+'%'});else if(r.overlapPct>0)r.signals.push({type:'good',text:'Overlap',detail:r.overlapPct+'% — preserves context'})}}
+  var words=text.toLowerCase().split(/\s+/).filter(function(w){return w.length>0});var cw=words.filter(function(w){var cl=w.replace(/[^a-z0-9]/g,'');return cl.length>2&&!STOP_WORDS.has(cl)});r.density=words.length>0?Math.round((cw.length/words.length)*100):0;
+  if(r.density<25)r.signals.push({type:'warn',text:'Low density',detail:r.density+'% content'});else if(r.density>55)r.signals.push({type:'good',text:'High density',detail:r.density+'% content'});
+  var wf={};cw.forEach(function(w){var cl=w.replace(/[^a-z0-9_-]/g,'');if(cl.length>3)wf[cl]=(wf[cl]||0)+1});var ct2=text.match(/[A-Z][a-zA-Z]{2,}/g)||[];ct2.forEach(function(t2){var l=t2.toLowerCase();if(!STOP_WORDS.has(l))wf[l]=(wf[l]||0)+2});
+  r.keywords=Object.entries(wf).sort(function(a,b){return b[1]-a[1]}).slice(0,4).map(function(e){return e[0]});
+  if(co>0)r.chunkType=co>=2?'Code example':'Code + text';else if(tl.length>0)r.chunkType='Data table';else if(hm)r.chunkType='Doc section';else if(ll.length>3)r.chunkType='List';else if(/\?[\s\n]/.test(text)&&text.split('?').length>2)r.chunkType='FAQ';else r.chunkType='Narrative';
+  if(!r.boundaryPreview&&c.end<fullText.length){r.boundaryPreview={before:text.slice(-20).replace(/\n/g,'↵'),after:fullText.slice(c.end,c.end+20).replace(/\n/g,'↵'),type:'clean'}}
+  var ec=r.signals.filter(function(s){return s.type==='error'}).length;var wc=r.signals.filter(function(s){return s.type==='warn'}).length;
+  if(ec>=2||ec===1&&wc>=2)r.grade='problematic';else if(ec===1||wc>=2)r.grade='acceptable';else if(wc===1)r.grade='acceptable';else r.grade='good';
+  return r;
+}
+function analyzeStrategy(chunks,fullText){var results=chunks.map(function(c,i){return analyzeChunkDeep(c,i,chunks,fullText)});var g={good:0,acceptable:0,problematic:0};results.forEach(function(r){g[r.grade]++});var tt=0;chunks.forEach(function(c){tt+=c.tokens});var sg='good';if(g.problematic>chunks.length*.3)sg='problematic';else if(g.problematic>0||g.acceptable>chunks.length*.5)sg='acceptable';return{chunks:results,summary:{count:chunks.length,totalTokens:tt,avgTokens:chunks.length?Math.round(tt/chunks.length):0,grades:g,stratGrade:sg}}}
+
+// Cost/Context
+var EMB=[{n:'OpenAI small',p:.02},{n:'OpenAI large',p:.13},{n:'Cohere v3',p:.10},{n:'Voyage AI',p:.06},{n:'Open source',p:0}];
+function calcCosts(tt){return EMB.map(function(m){return{name:m.n,cost:m.p>0?(tt*m.p/1e6):0,free:m.p===0}})}
+var CTX=[{n:'GPT-4o 128K',t:128000},{n:'Claude 200K',t:200000},{n:'Gemini 1M',t:1000000}];
+function calcCtx(avg){var u=avg*5;return CTX.map(function(m){return{name:m.n,pct:((u/m.t)*100).toFixed(2)}})}
+
+// Code gen
+function genCode(fw,s,sz,ov,sn){if(fw==='langchain'){if(s==='fixed')return'# RAG Chunking Playground — Fixed-Size\nfrom langchain.text_splitter import CharacterTextSplitter\n\nsplitter = CharacterTextSplitter(\n    chunk_size='+sz*4+',\n    chunk_overlap='+ov*4+',\n    separator=""\n)\nchunks = splitter.split_text(text)\nprint(f"Created {len(chunks)} chunks")';if(s==='recursive')return'# RAG Chunking Playground — Recursive\nfrom langchain.text_splitter import RecursiveCharacterTextSplitter\n\nsplitter = RecursiveCharacterTextSplitter(\n    chunk_size='+sz*4+',\n    chunk_overlap='+ov*4+',\n    separators=["\\n\\n","\\n",". "," ",""]\n)\nchunks = splitter.split_text(text)\nprint(f"Created {len(chunks)} chunks")';if(s==='sentence')return'# RAG Chunking Playground — Sentence\nimport re\n\nsentences = re.split(r"(?<=[.!?])\\s+", text)\nchunks = [" ".join(sentences[i:i+'+sn+'])\n          for i in range(0, len(sentences), '+sn+')]\nprint(f"Created {len(chunks)} chunks")';if(s==='markdown')return'# RAG Chunking Playground — Markdown\nfrom langchain.text_splitter import MarkdownHeaderTextSplitter\n\nheaders = [("#","H1"),("##","H2"),("###","H3")]\nsplitter = MarkdownHeaderTextSplitter(\n    headers_to_split_on=headers\n)\nchunks = splitter.split_text(text)\nprint(f"Created {len(chunks)} chunks")'}if(fw==='llamaindex')return'# RAG Chunking Playground (LlamaIndex)\nfrom llama_index.core.node_parser import SentenceSplitter\n\nparser = SentenceSplitter(\n    chunk_size='+sz+',\n    chunk_overlap='+ov+'\n)\nnodes = parser.get_nodes_from_documents(docs)\nprint(f"Created {len(nodes)} nodes")';return'# RAG Chunking Playground (Haystack)\nfrom haystack.components.preprocessors import DocumentSplitter\n\nsplitter = DocumentSplitter(\n    split_by="'+(s==='sentence'?'sentence':'word')+'",\n    split_length='+sz+',\n    split_overlap='+ov+'\n)\nresult = splitter.run(documents=[doc])'}
+function genRegexCode(p){return'# RAG Chunking Playground — Custom Regex\nimport re\n\npattern = r"'+p+'"\nchunks = re.split(pattern, text)\nchunks = [c.strip() for c in chunks if c.strip()]\nprint(f"Created {len(chunks)} chunks")'}
+
+// =========================================================================
+// SAMPLES 
+// =========================================================================
+
+var SAMPLES={
+api:"## Authentication\n\nAll API requests require an API key passed via the Authorization header as a Bearer token. You can generate and manage API keys from your account dashboard under Settings > API Keys. Each key can be scoped to specific endpoints and rate limit tiers.\n\nThere are two types of API keys: secret keys and restricted keys. Secret keys have full access to all API endpoints and should only be used in server-side environments. Never expose secret keys in client-side code, public repositories, or browser environments. Restricted keys allow you to limit access to specific resources — for example, a key that can only create chat completions but cannot access billing or fine-tuning endpoints.\n\nAll API requests must be made over HTTPS. Requests made over plain HTTP will be rejected. Unauthenticated requests return a 401 error immediately.\n\nAPI keys do not expire by default. However, we strongly recommend rotating keys every 90 days. You can revoke a key at any time from the dashboard, and revocation takes effect immediately. Any in-flight requests using a revoked key will fail.\n\n## Rate Limits\n\nRate limits are enforced per API key, not per account. This means if you have multiple keys, each one gets its own rate limit allocation.\n\nFree tier keys are limited to 60 requests per minute and 100,000 tokens per day. Pro tier keys allow 500 requests per minute and 2,000,000 tokens per day. Enterprise keys have configurable limits based on your contract.\n\nWhen you exceed your rate limit, the API returns a 429 Too Many Requests response. The response includes a Retry-After header indicating how many seconds to wait before retrying. We recommend implementing exponential backoff with jitter in your retry logic to avoid thundering herd problems.\n\nRate limits apply separately to each endpoint. For example, hitting the rate limit on chat completions does not affect your ability to call the embeddings endpoint. The X-RateLimit-Remaining and X-RateLimit-Reset headers are included in every response so you can monitor your usage proactively.\n\n## Endpoints\n\n### POST /v1/chat/completions\n\nCreates a model response for a given conversation. This is the primary endpoint for generating text. You send a messages array containing objects with role and content fields, and the model returns a completion.\n\nRequired parameters:\n- model: string — specifies which model to use (e.g., \"gpt-4o\", \"gpt-4o-mini\", \"gpt-3.5-turbo\")\n- messages: array — a list of message objects. Each message has a role (\"system\", \"user\", or \"assistant\") and content (the text of the message)\n\nOptional parameters:\n- temperature: float between 0 and 2 (default 1.0). Lower values make output more deterministic. Higher values increase randomness and creativity.\n- max_tokens: integer — the maximum number of tokens to generate in the response. If not set, the model generates until it hits a natural stopping point or the context window limit.\n- top_p: float between 0 and 1 — nucleus sampling. An alternative to temperature. We recommend using one or the other, not both.\n- stream: boolean (default false) — if true, the response is sent as server-sent events as the model generates tokens, rather than waiting for the complete response.\n- frequency_penalty: float between -2 and 2 (default 0). Positive values penalize tokens that have already appeared in the text, reducing repetition.\n- presence_penalty: float between -2 and 2 (default 0). Positive values penalize tokens that have appeared at all, encouraging the model to discuss new topics.\n- stop: string or array — up to 4 sequences where the model will stop generating. The stop sequence itself is not included in the output.\n\nExample request:\n```json\n{\n  \"model\": \"gpt-4o\",\n  \"messages\": [\n    {\"role\": \"system\", \"content\": \"You are a helpful coding assistant.\"},\n    {\"role\": \"user\", \"content\": \"Write a Python function to calculate Fibonacci numbers using memoization.\"}\n  ],\n  \"temperature\": 0.7,\n  \"max_tokens\": 500\n}\n```\n\nExample response:\n```json\n{\n  \"id\": \"chatcmpl-abc123\",\n  \"object\": \"chat.completion\",\n  \"created\": 1709123456,\n  \"model\": \"gpt-4o\",\n  \"choices\": [\n    {\n      \"index\": 0,\n      \"message\": {\n        \"role\": \"assistant\",\n        \"content\": \"Here is a Python function...\"\n      },\n      \"finish_reason\": \"stop\"\n    }\n  ],\n  \"usage\": {\n    \"prompt_tokens\": 42,\n    \"completion_tokens\": 156,\n    \"total_tokens\": 198\n  }\n}\n```\n\n### POST /v1/embeddings\n\nGenerates vector embeddings for input text. Send a string or an array of strings and receive float arrays suitable for semantic search, clustering, and similarity comparison.\n\nRequired parameters:\n- model: string (e.g., \"text-embedding-3-small\", \"text-embedding-3-large\")\n- input: string or array of strings — the text to embed. Each string can be up to 8,191 tokens.\n\nOptional parameters:\n- dimensions: integer — the number of dimensions for the output embedding. Only supported by certain models. Reducing dimensions can lower storage costs while preserving most of the semantic information.\n- encoding_format: string — either \"float\" (default) or \"base64\". Base64 reduces response size for large batches.\n\n### GET /v1/models\n\nReturns a list of all models available to your API key. Each model object includes the model ID, owner, creation date, context window size, and training data cutoff. Use this endpoint to programmatically verify which models you have access to before making completion requests.\n\n## Error Handling\n\nAll errors return a consistent JSON format with a type, message, and code field. The type field categorizes the error for programmatic handling. The message field provides a human-readable description. The code field mirrors the HTTP status code.\n\nCommon error codes:\n- 400 Bad Request — the request body is malformed, a required parameter is missing, or a parameter value is invalid. Check the message field for specific details about which parameter caused the error.\n- 401 Unauthorized — your API key is missing, invalid, expired, or has been revoked. Verify your Authorization header format.\n- 403 Forbidden — your API key does not have permission to access this endpoint. This occurs with restricted keys that lack the required scope.\n- 404 Not Found — the endpoint URL is incorrect or the resource does not exist.\n- 429 Too Many Requests — you have exceeded your rate limit. Implement retry logic with the Retry-After header value.\n- 500 Internal Server Error — something went wrong on our end. These are rare and usually transient. Retry with exponential backoff.\n- 503 Service Unavailable — the API is temporarily overloaded. Retry after a short delay.\n\n## Webhooks\n\nConfigure webhooks to receive real-time notifications when asynchronous operations complete, such as fine-tuning jobs or batch processing runs. Webhook payloads include the event type, a timestamp, and the relevant resource data.\n\nAll webhook requests include an X-Signature header containing an HMAC-SHA256 signature. Verify this signature against your webhook secret to ensure the request originated from our servers and was not tampered with in transit.\n\nSupported webhook events include: completion.finished, fine_tune.succeeded, fine_tune.failed, batch.completed, batch.expired, and billing.usage_threshold_reached.",
+
+legal:"TERMS OF SERVICE\n\nEffective Date: January 1, 2026\n\nThank you for using our platform. These Terms of Service (\"Terms\") govern your access to and use of our website, products, applications, and services (collectively, the \"Service\"). By accessing or using the Service, you agree to be bound by these Terms. If you do not agree, you may not use the Service.\n\nWe may modify these Terms at any time by posting a revised version on our website. Material changes take effect 30 days after posting. Your continued use of the Service after changes take effect constitutes acceptance of the modified Terms. We will notify you of material changes via email or through the Service interface.\n\n## 1. Account Terms\n\nYou must be at least 13 years old to use the Service. If you are under 18, you must have your parent or legal guardian's consent. You are responsible for maintaining the security of your account and password. We cannot and will not be liable for any loss or damage from your failure to comply with this security obligation.\n\nYou are responsible for all content posted and activity that occurs under your account, even when content is posted by others who have access to your account. One person or legal entity may maintain no more than one free account. You may not use the Service for any illegal purpose or to violate any laws in your jurisdiction.\n\nYour login credentials are confidential. You must notify us immediately of any unauthorized use of your account or any other breach of security. We will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.\n\n## 2. Acceptable Use\n\nYou agree not to reproduce, duplicate, copy, sell, resell, or exploit any portion of the Service without our express written permission. You agree not to use the Service to upload, transmit, or distribute any computer viruses, worms, or any software intended to damage or alter a computer system or data.\n\nYou must not attempt to gain unauthorized access to the Service, other accounts, computer systems, or networks connected to the Service through hacking, password mining, or any other means. You must not use the Service for any high-risk activities where Service failure could lead to death, personal injury, or environmental damage.\n\nWe may, but have no obligation to, remove accounts that contain content we determine in our sole discretion to be unlawful, offensive, threatening, defamatory, or otherwise objectionable or that violates any party's intellectual property or these Terms.\n\nVerbal, physical, written, or other abuse (including threats of abuse or retribution) of any Service customer, employee, or officer will result in immediate account termination.\n\n## 3. API Terms\n\nCustomers may access their account data via our API (Application Programming Interface). Any use of the API, including through a third-party product that accesses the Service, is bound by these Terms plus the following specific provisions:\n\nYou expressly understand and agree that we shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages resulting from your use of the API or third-party products that access data via the API.\n\nAbuse or excessively frequent requests to the Service via the API may result in the temporary or permanent suspension of your account's access to the API. We determine abuse or excessive usage of the API at our sole discretion and will make a reasonable attempt to warn the account owner via email prior to suspension.\n\nWe reserve the right at any time to modify or discontinue, temporarily or permanently, your access to the API with or without notice. API rate limits are published in our developer documentation and may change from time to time. It is your responsibility to monitor and comply with current limits.\n\n## 4. Intellectual Property and Content Ownership\n\nWe claim no intellectual property rights over the material you provide to the Service. Your profile and materials uploaded remain yours. However, by setting your repositories or content to be viewed publicly, you agree to allow others to view your content.\n\nThe look and feel of the Service is the intellectual property of our company. You may not duplicate, copy, or reuse any portion of the HTML, CSS, JavaScript, visual design elements, or concepts without express written permission from us.\n\nWe do not pre-screen content, but we reserve the right to remove any content posted to the Service for any reason. You retain ownership of and responsibility for content you create or own. If you post content that you did not create or do not own, you agree that you are responsible for ensuring you have the rights to post it.\n\n## 5. Privacy and Data Protection\n\nWe collect and process personal data in accordance with our Privacy Policy, which is incorporated into these Terms by reference. By using the Service, you consent to the collection and processing described in our Privacy Policy.\n\nWe implement industry-standard security measures including encryption at rest using AES-256 and encryption in transit using TLS 1.3. We maintain SOC 2 Type II certification and undergo annual third-party security audits.\n\nIn the event of a data breach affecting your personal data, we will notify you within 72 hours of becoming aware of the breach. Notification will be sent via the email address associated with your account and will include a description of the breach, the types of data affected, and the steps we are taking in response.\n\nWe comply with the General Data Protection Regulation (GDPR) for users in the European Economic Area, the California Consumer Privacy Act (CCPA) for users in California, and all other applicable data protection regulations. You may request export or deletion of your personal data at any time through your account settings or by contacting our privacy team.\n\n## 6. Payment and Billing\n\nFor paid Service plans, you agree to pay all fees associated with your selected plan. Fees are billed in advance on a monthly or annual basis and are non-refundable except as expressly stated in these Terms or required by law.\n\nDowngrading your plan may cause the loss of features or capacity of your account. We do not accept any liability for such loss. All fees are exclusive of taxes, levies, or duties imposed by taxing authorities, and you shall be responsible for payment of all such taxes, levies, or duties.\n\n## 7. Cancellation and Termination\n\nYou are solely responsible for properly canceling your account. You can cancel at any time by going to Settings in the navigation bar at the top of the screen. The Settings screen provides a simple cancellation link. An email or phone request to cancel your account is not considered cancellation.\n\nAll of your content will be immediately deleted upon cancellation. This information cannot be recovered once your account is canceled. We retain the right to keep anonymized, aggregated data derived from your usage for the purpose of improving the Service.\n\nIf you cancel before the end of your current paid period, your cancellation will take effect at the end of the current billing cycle. You will retain access to the Service until that time.\n\nEither party may terminate this agreement for cause if the other party materially breaches any provision and fails to cure within 30 days of receiving written notice specifying the breach. We reserve the right to suspend or terminate your account at any time for any reason, with or without notice.\n\n## 8. Limitation of Liability\n\nYou expressly understand and agree that we shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages, including but not limited to damages for loss of profits, goodwill, use, data, or other intangible losses, regardless of whether we have been advised of the possibility of such damages.\n\nOur total aggregate liability arising out of or relating to these Terms shall not exceed the greater of (a) the amount you paid us in the 12 months preceding the claim, or (b) one hundred dollars ($100). This limitation applies regardless of the theory of liability and even if any limited remedy fails of its essential purpose.\n\nThese Terms shall be governed by the laws of the State of Delaware, without regard to its conflict of law provisions.",
+
+blog:"Something satisfying happened last Tuesday. A customer wrote in to say our AI assistant had correctly resolved their billing dispute — identified the duplicate charge, issued the refund, and explained what happened — all without a human touching it. Six months ago, that same system was confidently telling people to contact a phone number we discontinued in 2019.\n\nThe difference between the broken version and the working version was not the model. We used the same model the entire time. It was not the prompt — we barely changed it. And it definitely was not some magical vector database upgrade.\n\nIt was chunking. Specifically, how we split our 847 help articles into pieces before feeding them to the retrieval system.\n\nI want to explain what went wrong, what we tried, and what actually fixed it, because I think most teams building RAG systems right now are making the same mistake we made. And it is an easy mistake to make because chunking sounds boring. It sounds like a preprocessing detail you can set once and forget. It is the opposite of that.\n\nWhen we started building the support agent last year, we followed every tutorial we could find. Load your documents, split them into chunks, embed them, store them in a vector database, retrieve the relevant ones at query time, and pass them to the language model as context. Simple enough. The tutorials all suggested fixed-size chunking at around 1,000 tokens with no overlap. So that is what we did.\n\nThe results looked fine in testing. We had maybe 50 test queries and the system handled most of them reasonably well. Then we launched to real users and everything fell apart.\n\nCustomers would ask a simple question like \"how do I change my payment method\" and the system would respond with a paragraph about payment methods mashed together with a paragraph about two-factor authentication. The response would try to connect these unrelated topics because, from the model's perspective, they were part of the same \"context\" — the same chunk.\n\nThe problem was obvious in hindsight. Our help articles averaged around 400 words each. A 1,000-token chunk (roughly 750 words) meant that a single chunk often contained the end of one article and the beginning of a completely unrelated article. The chunk about changing your payment method literally ended mid-sentence and continued with the opening line of an article about setting up two-factor authentication.\n\nNo amount of prompt engineering can fix this. If you give a language model context that says \"click Account Settings to update your card, and to enable two-factor authentication go to Security,\" the model will try to synthesize both pieces of information. It is doing exactly what you asked it to do — answer based on the provided context. The context was just garbage.\n\nOur first fix was reducing the chunk size to 400 tokens with 50 tokens of overlap. This immediately helped. The cross-article contamination mostly stopped because chunks were now small enough to stay within a single article's boundaries. Retrieval accuracy went from 52 percent to 71 percent overnight.\n\nBut we still had problems. Some articles had multiple sections with headers like \"For Personal Accounts\" and \"For Business Accounts.\" The fixed-size chunking was splitting these sections in arbitrary places. A customer would ask about business account billing, and the retrieval would return a chunk that started halfway through the personal account section and ended halfway through the business section.\n\nThe second fix was switching to markdown-aware chunking. Our help articles were written in markdown with clear header structure. We configured the chunker to split at H2 boundaries, keeping each section as its own chunk. Now \"For Personal Accounts\" was one chunk and \"For Business Accounts\" was a completely separate chunk. Retrieval accuracy jumped to 89 percent.\n\nThe third fix, and this was the one that got us to production quality, was adding a reranker. Even with better chunking, the top 5 retrieved chunks occasionally included one that was keyword-relevant but semantically wrong. For example, a question about \"canceling a subscription\" would sometimes retrieve a chunk about \"canceling an invitation to a team member\" because both contained the word \"cancel.\" The reranker re-scored those 5 chunks for actual relevance to the specific query, pushing the irrelevant ones down. Accuracy hit 94 percent.\n\nTotal development time for all three fixes: about four days. We did not change the model. We did not change the vector database. We did not change the embedding model. We did not rewrite a single prompt. We changed how we cut up the text and added a reranking step.\n\nHere is the thing that surprised me most: the difference between strategies was visible immediately. You did not need to run an extensive evaluation pipeline. You could paste a single help article into a chunking tool, look at where the splits fell, and instantly see whether the chunks made sense. The bad chunks were obvious — they ended mid-sentence, they mixed topics, they separated headers from their content.\n\nIf I could go back and give myself one piece of advice at the start of this project, it would be this: before you spend any time on prompt engineering, before you evaluate embedding models, before you benchmark vector databases, open a chunking visualization tool and look at your chunks. Actually look at them. Read the text in each chunk and ask yourself: if someone asked a question and this chunk was the only context provided, would the answer make sense?\n\nIf the answer is no, your model does not stand a chance. Fix your chunks first. Everything else is optimization on top of a broken foundation.\n\nThe cost of getting chunking wrong is not just bad answers. It is lost trust. Every time our broken system gave a customer a response that mixed billing information with security settings, that customer learned not to trust the AI assistant. Rebuilding that trust took months even after we fixed the underlying problem. Some customers still skip the AI and go straight to human support because of those early bad experiences.\n\nChunking is not a preprocessing detail. It is the foundation your entire RAG system is built on. Treat it that way.",
+
+readme:"# LangWeave\n\nA framework for building retrieval-augmented generation pipelines in Python. Connect any document source to any language model with composable, testable components.\n\n## Why LangWeave\n\nMost RAG frameworks give you high-level abstractions that work great for demos but break down in production. LangWeave takes a different approach: every component is a standalone, testable unit that you can swap, configure, and debug independently.\n\n- **No magic.** Every step in the pipeline is explicit. You can inspect what goes in and what comes out at every stage.\n- **No lock-in.** Use any LLM provider, any embedding model, any vector store. Switch between them with a single line change.\n- **Production-first.** Built-in retry logic, error handling, token budgeting, and cost tracking from day one. Not added as an afterthought.\n- **Type-safe.** Full type hints on every public interface. Your IDE catches errors before your users do.\n\n## Installation\n\n```bash\npip install langweave\n```\n\nRequires Python 3.9 or higher. For GPU-accelerated local embeddings:\n\n```bash\npip install langweave[gpu]\n```\n\nFor all supported vector stores:\n\n```bash\npip install langweave[all-stores]\n```\n\nIndividual store extras are also available: \\`langweave[pinecone]\\`, \\`langweave[weaviate]\\`, \\`langweave[qdrant]\\`, \\`langweave[chroma]\\`, \\`langweave[pgvector]\\`.\n\n## Quick Start\n\n```python\nfrom langweave import Pipeline, Loader, Chunker, Embedder, Store, Generator\n\n# 1. Load documents from a directory\ndocs = Loader.from_directory(\"./knowledge_base/\", glob=\"**/*.md\")\n\n# 2. Chunk documents using recursive strategy\nchunks = Chunker.recursive(\n    docs,\n    chunk_size=400,\n    overlap=50,\n    separators=[\"\\\\n\\\\n\", \"\\\\n\", \". \", \" \"]\n)\n\n# 3. Generate embeddings\nembedder = Embedder(model=\"text-embedding-3-small\")\nembedded = embedder.embed(chunks)\n\n# 4. Store in a vector database\nstore = Store.pinecone(index=\"my-index\", namespace=\"docs\")\nstore.upsert(embedded)\n\n# 5. Query the pipeline\ngenerator = Generator(model=\"gpt-4o\", temperature=0.3)\npipeline = Pipeline(store=store, embedder=embedder, generator=generator)\n\nresponse = pipeline.query(\n    \"How do I configure webhook endpoints?\",\n    top_k=5\n)\n\nprint(response.answer)\nprint(f\"Sources: {[s.metadata['filename'] for s in response.sources]}\")\nprint(f\"Tokens used: {response.usage.total_tokens}\")\nprint(f\"Estimated cost: ${response.usage.estimated_cost:.4f}\")\n```\n\n## Configuration\n\nLangWeave supports YAML configuration files for reproducible pipeline setups. Save your pipeline configuration and share it across environments.\n\n```yaml\npipeline:\n  name: support-bot-v2\n  \nloader:\n  source: ./docs/\n  glob: \"**/*.md\"\n  exclude: [\"**/drafts/**\", \"**/archive/**\"]\n\nchunker:\n  strategy: recursive\n  chunk_size: 400\n  overlap: 50\n  separators: [\"\\\\n\\\\n\", \"\\\\n\", \". \", \" \"]\n\nembedder:\n  model: text-embedding-3-small\n  batch_size: 100\n  dimensions: 1536\n\nstore:\n  provider: pinecone\n  index: support-docs\n  namespace: production\n  metric: cosine\n\ngenerator:\n  model: gpt-4o\n  temperature: 0.3\n  max_tokens: 500\n  system_prompt: \"Answer based only on the provided context.\"\n\nretrieval:\n  top_k: 5\n  reranker: cohere-v3\n  score_threshold: 0.7\n\nmonitoring:\n  track_costs: true\n  track_latency: true\n  log_retrievals: true\n```\n\nLoad and run a pipeline from config:\n\n```python\nfrom langweave import Pipeline\n\npipeline = Pipeline.from_yaml(\"config.yaml\")\nresponse = pipeline.query(\"How do I reset my API key?\")\n```\n\n## Supported Integrations\n\n### LLM Providers\n\n| Provider | Models | Streaming | Function Calling |\n|----------|--------|-----------|-----------------|\n| OpenAI | GPT-4o, GPT-4o-mini, GPT-3.5 | Yes | Yes |\n| Anthropic | Claude Sonnet, Claude Haiku | Yes | Yes |\n| Google | Gemini Pro, Gemini Flash | Yes | Yes |\n| AWS Bedrock | Claude, Titan, Llama | Yes | Partial |\n| Local (Ollama) | Llama 3, Mistral, Phi-3 | Yes | No |\n\n### Embedding Models\n\n| Provider | Models | Dimensions | Max Tokens |\n|----------|--------|-----------|------------|\n| OpenAI | text-embedding-3-small | 1536 | 8191 |\n| OpenAI | text-embedding-3-large | 3072 | 8191 |\n| Cohere | embed-v3 | 1024 | 512 |\n| Voyage AI | voyage-3 | 1024 | 32000 |\n| Local (ONNX) | bge-small, e5-small | 384 | 512 |\n\n### Vector Stores\n\n| Store | Managed | Self-Hosted | Filtering | Hybrid Search |\n|-------|---------|-------------|-----------|---------------|\n| Pinecone | Yes | No | Yes | Yes |\n| Weaviate | Yes | Yes | Yes | Yes |\n| Qdrant | Yes | Yes | Yes | Yes |\n| ChromaDB | No | Yes | Yes | No |\n| pgvector | No | Yes | Basic | No |\n\n## Chunking Strategies\n\nLangWeave provides six built-in chunking strategies, each optimized for different document types:\n\n- **Fixed-size**: Split at exact token intervals. Fast but ignores content structure. Best for homogeneous text with no formatting.\n- **Recursive**: Tries paragraph breaks, then sentences, then words. The recommended default for most use cases.\n- **Sentence**: Groups N sentences per chunk. Good for conversational content and Q&A documents.\n- **Markdown**: Splits at heading boundaries (H1, H2, H3). Ideal for documentation, READMEs, and structured content.\n- **Regex**: Split on any custom pattern you define. Useful for changelogs, legal documents, or any content with predictable delimiters.\n- **Semantic**: Uses embedding similarity to detect topic changes. Most accurate but requires API calls for embeddings.\n\n## API Reference\n\n### Pipeline.query(question, top_k=5, filters=None)\n\nRuns the full RAG pipeline: embed the question, retrieve relevant chunks, optionally rerank, and generate a response. Returns a Response object with answer, sources, usage stats, and latency metrics.\n\n### Chunker.recursive(docs, chunk_size, overlap, separators)\n\nSplits documents using a recursive strategy that tries each separator in order, falling back to the next when chunks exceed the target size. Returns a list of Chunk objects with text, start/end positions, and metadata.\n\n### Store.upsert(chunks)\n\nInserts or updates chunks in the vector store. Handles batching, retry logic, and deduplication automatically. Returns a count of successfully stored chunks.\n\n### Embedder.embed(chunks)\n\nGenerates vector embeddings for a list of chunks. Handles batching based on the model's token limits. Tracks token usage and estimated cost. Returns chunks with embedding vectors attached.\n\n## Contributing\n\nWe welcome contributions. Please read CONTRIBUTING.md for guidelines on setting up a development environment, running tests, and submitting pull requests.\n\nAll new chunking strategies must include unit tests and a benchmark against at least two document types. See tests/chunkers/ for examples.\n\n## License\n\nMIT — see LICENSE for details.",
+
+faq:"How do I create an account?\nGo to the signup page and click \"Get Started Free\" in the top right corner. Enter your email address and choose a password, or sign up instantly with your Google or Apple account. We will send a verification email within 30 seconds. Click the link in that email to activate your account. No credit card is required to get started, and the entire process takes under a minute. Once verified, you are taken directly to your workspace where you can start creating pages immediately.\n\nWhat payment methods do you accept?\nWe accept all major credit cards including Visa, Mastercard, American Express, and Discover. We also accept PayPal and Apple Pay. Enterprise customers on annual contracts can pay by wire transfer or ACH with NET-30 terms. All prices are displayed and charged in US dollars. We do not currently accept cryptocurrency, prepaid debit cards, or purchase orders for individual plans.\n\nCan I switch between plans?\nYes, you can upgrade or downgrade at any time from Settings then Billing. When you upgrade, the change takes effect immediately and you are charged a prorated amount for the remainder of your current billing cycle. When you downgrade, you keep full access to your current plan features until the end of your billing period, at which point the downgrade takes effect. No data is deleted when you downgrade, but some features become read-only. For example, if you downgrade from Team to Personal, your shared workspaces remain visible but you cannot add new members or create new shared pages until you upgrade again.\n\nWhat is your refund policy?\nWe offer a full refund within the first 14 days of any paid plan, no questions asked. Simply contact support or click \"Request Refund\" in your billing settings. After 14 days, we do not issue refunds for monthly plans, but you can cancel anytime to prevent future charges. Annual plans have a 30-day refund window from the date of purchase or renewal. Partial refunds are not available for annual plans after the 30-day window. If you experience a service outage exceeding our published SLA commitments, you may be eligible for service credits as described in our Service Level Agreement.\n\nHow do I cancel my subscription?\nNavigate to Settings, then Billing, then click \"Cancel Plan.\" You will see a confirmation screen showing when your access ends and what happens to your data. Your account stays fully functional until the end of your current billing period. After cancellation, your data is retained for 90 days in a read-only state. During those 90 days, you can reactivate your account and everything will be exactly as you left it. After 90 days, your data is permanently and irreversibly deleted from our servers and all backups. We send reminder emails at 60 days and 80 days before deletion. Enterprise customers with custom contracts should contact their account manager for cancellation procedures.\n\nDo you offer a free plan?\nYes. Our free plan is not a trial — it is a permanent free tier with no time limit. It includes unlimited pages for personal use, up to 5 guest collaborators, 5 MB file upload limit per file, 7-day page history, and access to all core editing features including databases, calendars, and kanban boards. The free plan does not include advanced permissions, admin tools, unlimited file uploads, SAML single sign-on, or priority support. You can use the free plan indefinitely and only upgrade when you need team features or higher limits.\n\nWhat is the difference between Personal and Team plans?\nPersonal is designed for individual use and costs $10 per month billed monthly or $8 per month billed annually. It includes everything in the free plan plus unlimited file uploads up to 50 MB each, 30-day page history, and priority email support with 24-hour response time. Team is designed for collaborative work and costs $18 per user per month billed monthly or $15 per user per month billed annually. It includes everything in Personal plus unlimited team members, collaborative workspaces, advanced permissions with granular access controls, admin tools for managing members and security, and 90-day page history. Team plan pricing is per user, so a team of 5 would cost $90 per month on monthly billing.\n\nHow do I invite team members?\nFrom any workspace, click \"Settings and Members\" in the left sidebar, then click \"Add Members.\" Enter their email addresses separated by commas. You can assign one of four roles: Admin, Full Member, Editor, or Viewer. Admins can manage billing, security settings, and other members. Full Members can create, edit, and share content within the workspace. Editors can modify existing content but cannot create new top-level pages or change workspace settings. Viewers have read-only access. Invited members receive an email with a link to join your workspace. If they do not already have an account, they can create one during the invitation acceptance process. Each new member added to a Team or Enterprise plan is automatically included in your next billing cycle.\n\nIs my data secure?\nSecurity is foundational to our platform, not an add-on. All data is encrypted at rest using AES-256 encryption and in transit using TLS 1.3. We are SOC 2 Type II certified, and we undergo a comprehensive third-party security audit annually. Our infrastructure runs on AWS with data centers in the United States, European Union, and Asia Pacific. Enterprise customers can choose their data residency region. We implement role-based access controls, audit logging of all administrative actions, and support SAML 2.0 single sign-on for Enterprise plans. We never share, sell, or use your data for training AI models. Our complete security whitepaper is available at our trust center page, and we welcome security researchers to participate in our bug bounty program.\n\nDo you have an API?\nYes. We provide a comprehensive REST API that allows you to read, create, update, and delete pages, databases, database entries, comments, and users programmatically. The API supports OAuth 2.0 authentication for third-party integrations and internal integration tokens for your own applications. Rate limits are 3 requests per second per integration for standard plans and 10 requests per second for Enterprise. We offer official client libraries for Python, JavaScript, Ruby, and Go. Full API documentation with interactive examples, code snippets in all supported languages, and a Postman collection is available at our developer documentation site. Our API changelog is published monthly so you can track new endpoints, deprecated features, and breaking changes."
+
+};
+
+
+// =========================================================================
+// STATE
+// =========================================================================
+var STRAT_NAMES={fixed:'Fixed-Size',recursive:'Recursive',sentence:'Sentence',markdown:'Markdown',regex:'Regex',semantic:'Semantic'};
+var activeStrat='recursive',allChunks={},allAnalysis={},codeFw='langchain',codeVis=true;
+function getS(){return{size:+document.getElementById('sizeR').value,overlap:+document.getElementById('overR').value,sentences:+document.getElementById('sentR').value}}
+
+function runAll(){
+  document.querySelectorAll('.cblk').forEach(function(b) {
+    b.style.outline = '';
+    b.style.outlineOffset = '';  
+  });
+  document.getElementById('queryResults').innerHTML = '';
+  document.getElementById('queryInput').value = '';
+  
+  var text=document.getElementById('textInput').value;if(!text.trim())return;
+  if(text.length>50000){text=text.slice(0,50000);document.getElementById('textInput').value=text;updStats()}
+  var s=getS(),regexPat=document.getElementById('regexR').value;
+  allChunks={fixed:chunkFixed(text,s.size,s.overlap),recursive:chunkRecursive(text,s.size,s.overlap),sentence:chunkSentence(text,s.sentences),markdown:chunkMarkdown(text,3,s.size*4),regex:regexPat?chunkRegex(text,regexPat):null};
+  allAnalysis={};['fixed','recursive','sentence','markdown'].forEach(function(k){allAnalysis[k]=analyzeStrategy(allChunks[k],text)});
+  if(allChunks.regex)allAnalysis.regex=analyzeStrategy(allChunks.regex,text);
+  document.getElementById('results').classList.add('show');renderMap();setActive('recursive');
+  document.getElementById('queryPanel').style.display = 'block';
+  document.getElementById('guideCta').style.display='flex';
+  setTimeout(function(){document.querySelector('.results').scrollIntoView({behavior:'smooth',block:'start'})},100);
+}
+
+// =========================================================================
+// RENDER MAP
+// =========================================================================
+function renderMap(){
+  var el=document.getElementById('stratMap');
+  var strats=[{id:'fixed',name:'Fixed'},{id:'recursive',name:'Recursive'},{id:'sentence',name:'Sentence'},{id:'markdown',name:'Markdown'},{id:'regex',name:'Regex'},{id:'semantic',name:'Semantic'}];
+  var html='';
+  strats.forEach(function(st){
+    var an=allAnalysis[st.id],chunks=allChunks[st.id],isA=st.id===activeStrat,isSem=st.id==='semantic',isRegex=st.id==='regex';
+    html+='<div class="srow'+(isA?' active-row':'')+'" data-strat="'+st.id+'">';
+    html+='<div class="srow-label"><span class="srow-dot"'+(isSem?' style="background:var(--purple);box-shadow:0 0 5px var(--purple)"':'')+'></span><span class="srow-name">'+st.name+'</span></div>';
+    html+='<div class="cbar">';
+    if(isSem&&!chunks){
+      html+='<div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--purple);opacity:.6">✨ Semantic — coming soon</div>';
+    } else if(isRegex&&!chunks){
+      html+='<div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--t2);opacity:.5">Enter a regex pattern above</div>';
+    } else if(an&&an.chunks.length){
+      var mx=Math.max.apply(null,an.chunks.map(function(c){return c.tokens}));
+      var maxBlocks=40,displayChunks=an.chunks,overflow=0;
+      if(an.chunks.length>maxBlocks){displayChunks=an.chunks.slice(0,maxBlocks);overflow=an.chunks.length-maxBlocks}
+      displayChunks.forEach(function(c,i){
+        var shade=Math.min(5,Math.max(1,Math.ceil((c.tokens/mx)*5)));
+        var cls='cblk cblk-s'+shade;
+      var gc2=c.grade==='good'?'g':c.grade==='acceptable'?'y':'r';
+        var gLabel=c.grade==='good'?'Excellent':c.grade==='acceptable'?'Acceptable':'Problematic';
+        var tip='<div class="ttip ttip-'+gc2+'"><div class="ttip-hdr"><span class="ttip-id">Chunk '+(i+1)+'</span><span class="ttip-grade ttip-grade-'+gc2+'">'+({good:'🟢',acceptable:'🟡',problematic:'🔴'}[c.grade])+' '+gLabel+'</span></div>';
+        tip+='<div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin:4px 0 8px">'+c.tokens+' <span style="font-size:11px;font-weight:600;color:var(--t2)">tokens</span></div>';
+        // Only show warnings/errors + one key positive (skip "good size", density, keywords, chunk type, overlap)
+        var shown=0;
+        c.signals.forEach(function(sig){
+          if(sig.text==='Good size'||sig.text==='Paragraph start'||sig.text==='Overlap'||sig.text==='High density'||sig.text==='Low density')return;
+          if(shown>=3)return;
+          var icon=sig.type==='good'?'✓':sig.type==='warn'?'⚠':'✗';
+          var cls2=sig.type==='good'?'sig-good':sig.type==='warn'?'sig-warn':'sig-error';
+          tip+='<div class="ttip-sig"><span class="sig-icon '+cls2+'">'+icon+'</span><span><span class="sig-text">'+sig.text+'</span> <span class="sig-detail">'+sig.detail+'</span></span></div>';
+          shown++;
+        });
+        if(c.boundaryPreview&&(c.boundaryPreview.type==='word'||c.boundaryPreview.type==='sentence')){
+          tip+='<div class="ttip-bnd"><div class="bnd-label">Cut point</div>';
+          if(c.boundaryPreview.type==='word')tip+='<div class="bnd-text">"...'+escH(c.boundaryPreview.before)+'<span class="bnd-cut">|</span>'+escH(c.boundaryPreview.after)+'..."</div>';
+          else tip+='<div class="bnd-text">"...'+escH(c.boundaryPreview.before)+'"</div>';
+          tip+='</div>';
+        }
+        tip+='</div>';;
+        html+='<div class="'+cls+'" style="flex:'+c.tokens+'" data-strat="'+st.id+'" data-idx="'+i+'" onmouseenter="hlMap(\''+st.id+'\','+i+')" onmouseleave="clrMap()">'+tip;
+        
+        html+='</div>';
+      });
+      if(overflow>0)html+='<div style="min-width:40px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--t2);background:rgba(6,182,212,0.06);border-radius:3px;padding:0 4px">+'+overflow+'</div>';
+    }
+    html+='</div>';
+    if(an){
+      html+='<div class="srow-stats"><span class="ss-c">'+an.summary.count+' <span style="color:var(--t2);font-weight:400">chunks</span></span><span class="ss-a">'+an.summary.avgTokens+' <span style="color:var(--t2);font-weight:400">avg</span></span></div>';
+      var bg=an.summary.stratGrade==='good'?'badge-g':an.summary.stratGrade==='acceptable'?'badge-y':'badge-r';
+      var bl=an.summary.stratGrade==='good'?'✓ Clean':an.summary.stratGrade==='acceptable'?an.summary.grades.acceptable+'⚠':an.summary.grades.problematic+'✗';
+      html+='<span class="srow-badge '+bg+'">'+bl+'</span>';
+    } else if(isSem){html+='<div class="srow-stats"><span class="ss-c">—</span><span class="ss-a">—</span></div><span class="srow-badge badge-ai">✨ AI</span>'}
+    else if(isRegex&&!chunks){html+='<div class="srow-stats"><span class="ss-c">—</span><span class="ss-a">—</span></div>'}
+    html+='</div>';
+  });
+  el.innerHTML=html;
+  el.querySelectorAll('.srow').forEach(function(r){r.addEventListener('click',function(e){if(e.target.closest('.cblk'))return;var s2=this.getAttribute('data-strat');if(s2==='semantic'||(!allChunks[s2]))return;setActive(s2)})});
+}
+
+function escH(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+// =========================================================================
+// RENDER DOC VIEWER
+// =========================================================================
+function renderDoc(sid){
+  var chunks=allChunks[sid],an=allAnalysis[sid];if(!chunks||!an)return;
+  var text=document.getElementById('textInput').value;
+  var html='',le=0;
+  an.chunks.forEach(function(c,i){var ch=chunks[i];if(ch.start>le)html+=escH(text.slice(le,ch.start));
+    var gc=c.grade==='good'?'g':c.grade==='acceptable'?'y':'r';var eo=i%2===0?'even':'odd';
+    html+='<span class="cbg cbg-'+gc+'">'+(i+1)+'</span><span class="hl hl-'+gc+'-'+eo+'" data-idx="'+i+'" data-grade="'+gc+'">'+escH(ch.text)+'</span>';le=ch.end;
+  });if(le<text.length)html+=escH(text.slice(le));
+  document.getElementById('docText').innerHTML=html;
+  var ch2='';an.chunks.forEach(function(c,i){var gc=c.grade==='good'?'g':c.grade==='acceptable'?'y':'r';
+    ch2+='<div class="ccard ccard-'+gc+'" data-idx="'+i+'"><div class="ccard-hdr"><span class="ccard-id ccard-id-'+gc+'">Chunk '+(i+1)+' · '+({good:'🟢',acceptable:'🟡',problematic:'🔴'}[c.grade])+'</span><div class="ccard-meta"><span>📏 <strong>'+c.tokens+'</strong> tok</span><span>'+c.chunkType+'</span></div></div>';
+    ch2+=escH(chunks[i].text);ch2+='<div class="ccard-signals">';c.signals.forEach(function(s2){var sc=s2.type==='good'?'csig-g':s2.type==='warn'?'csig-y':'csig-r';ch2+='<span class="ccard-sig '+sc+'">'+(s2.type==='good'?'✓':s2.type==='warn'?'⚠':'✗')+' '+s2.text+'</span>'});ch2+='</div></div>';
+  });document.getElementById('chunkCards').innerHTML=ch2;
+}
+
+function renderStats(sid){
+  var an=allAnalysis[sid];if(!an)return;var sm=an.summary;
+  document.getElementById('stStratName').textContent=STRAT_NAMES[sid]||sid;
+  document.getElementById('stChunks').textContent=sm.count;document.getElementById('stAvg').textContent=sm.avgTokens;
+  document.getElementById('stTotal').textContent=sm.totalTokens.toLocaleString();
+  document.getElementById('gradeRow').innerHTML='<div class="grade-pill gp-g">🟢 '+sm.grades.good+'</div><div class="grade-pill gp-y">🟡 '+sm.grades.acceptable+'</div><div class="grade-pill gp-r">🔴 '+sm.grades.problematic+'</div>';
+  var seen={},als='';an.chunks.forEach(function(c){c.signals.forEach(function(s2){if(s2.type!=='good'&&!seen[s2.text]){seen[s2.text]=true;var ac=s2.type==='warn'?'alert-warn':'alert-err';als+='<div class="alert '+ac+'">'+(s2.type==='warn'?'⚠':'✗')+' '+s2.text+'</div>'}})});
+  if(!als)als='<div class="alert alert-ok">✅ All chunks look good</div>';document.getElementById('stAlerts').innerHTML=als;
+  var costs=calcCosts(sm.totalTokens);var chtml='';costs.forEach(function(c2){chtml+='<tr><td class="ct-n">'+c2.name+'</td><td class="ct-p">'+(c2.free?'Free':'$'+c2.cost.toFixed(6))+'</td></tr>'});document.getElementById('costTable').innerHTML=chtml;
+  var ctx=calcCtx(sm.avgTokens);var xhtml='';ctx.forEach(function(c3){xhtml+='<tr><td class="ct-n">'+c3.name+'</td><td class="ct-p" style="color:var(--teal)">'+c3.pct+'%</td></tr>'});document.getElementById('ctxTable').innerHTML=xhtml;
+  renderCode(sid);
+}
+
+function renderCode(sid){
+  var s=getS();var code=sid==='regex'?genRegexCode(document.getElementById('regexR').value||''):genCode(codeFw,sid,s.size,s.overlap,s.sentences);
+  code=escH(code).replace(/(from |import |def )/g,'<span class="kw">$1</span>').replace(/("[^"]*")/g,'<span class="str">$1</span>').replace(/(\d+)/g,'<span class="num">$1</span>').replace(/(#.*)/g,'<span class="cm">$1</span>');
+  document.getElementById('codeBox').innerHTML='<button class="copy-btn" id="codeCopy">Copy</button>'+code;
+  document.getElementById('codeCopy').onclick=function(){navigator.clipboard.writeText(document.getElementById('codeBox').textContent.replace('Copy','').trim());this.textContent='Copied!';var b=this;setTimeout(function(){b.textContent='Copy'},1500)};
+}
+
+function setActive(id){
+  activeStrat=id;document.getElementById('docStratLabel').textContent=STRAT_NAMES[id]||id;
+  renderDoc(id);renderStats(id);
+  document.querySelectorAll('.srow').forEach(function(r){r.classList.toggle('active-row',r.getAttribute('data-strat')===id)});
+}
+
+// =========================================================================
+// HOVER SYNC — grade-colored glow
+// =========================================================================
+function hlMap(st,idx){
+  if(st!==activeStrat&&allChunks[st])setActive(st);
+  var dt=document.getElementById('docText');dt.classList.add('dimmed');
+  dt.querySelectorAll('.hl').forEach(function(s2){s2.classList.remove('glow-g');s2.classList.remove('glow-y');s2.classList.remove('glow-r')});
+  var spans=dt.querySelectorAll('.hl');
+  var grade='good';
+  if(spans[idx]){var an=allAnalysis[activeStrat];grade=an&&an.chunks[idx]?an.chunks[idx].grade:'good';
+    var gc3=grade==='good'?'glow-g':grade==='acceptable'?'glow-y':'glow-r';
+    spans[idx].classList.add(gc3);
+    var docEl=document.getElementById('docPanel');
+    var rect=spans[idx].getBoundingClientRect();
+    var panelRect=docEl.getBoundingClientRect();
+    docEl.scrollTop+=rect.top-panelRect.top-60}
+   
+    // Also highlight the map block
+              document.querySelectorAll('.cblk').forEach(function(bl) { bl.classList.remove('hl-active'); });
+              var mapBlocks = document.querySelectorAll('.cblk[data-strat="' + sid + '"][data-idx="' + match.index + '"]');
+              mapBlocks.forEach(function(bl) { bl.classList.add('hl-active'); });
+ // Also highlight card view
+  var cards=document.querySelectorAll('.ccard');
+  cards.forEach(function(cd){cd.style.opacity='.25';cd.style.transform='none'});
+  if(cards[idx]){cards[idx].style.opacity='1';cards[idx].style.transform='translateX(6px)';cards[idx].style.boxShadow='0 0 20px rgba('+(grade==='good'?'0,255,102':grade==='acceptable'?'255,255,0':'255,0,68')+',0.3)';
+    if(document.getElementById('chunkCards').classList.contains('show')){var docEl2=document.getElementById('docPanel');var rect2=cards[idx].getBoundingClientRect();var panelRect2=docEl2.getBoundingClientRect();docEl2.scrollTop+=rect2.top-panelRect2.top-60}}
+  document.querySelectorAll('.cblk').forEach(function(b){b.classList.remove('hl-active')});
+  document.querySelectorAll('.cblk[data-strat="'+st+'"][data-idx="'+idx+'"]').forEach(function(b){b.classList.add('hl-active')});
+}
+
+function clrMap(){
+  document.getElementById('docText').classList.remove('dimmed');
+  document.querySelectorAll('.hl').forEach(function(s2){s2.classList.remove('glow-g');s2.classList.remove('glow-y');s2.classList.remove('glow-r')});
+  document.querySelectorAll('.ccard').forEach(function(cd){cd.style.opacity='1';cd.style.transform='';cd.style.boxShadow=''});
+  document.querySelectorAll('.cblk').forEach(function(b){b.classList.remove('hl-active')});
+}
+// =========================================================================
+// Query the Chunks
+// =========================================================================
+
+function scoreChunks(query, chunks) {
+  var k1 = 1.5;
+  var b = 0.75;
+  var words = query.toLowerCase().split(/[\s\-\/\.\,\;\:\!\?\(\)\[\]\{\}\"\']+/)
+    .filter(function(w) { return w.length > 2 && !STOP_WORDS.has(w); });
+  if (words.length === 0) return [];
+
+  // Average chunk length in words
+  var totalLen = 0;
+  var chunkWords = chunks.map(function(ch) {
+    var w = ch.text.toLowerCase().split(/\s+/).filter(function(x) { return x.length > 0; });
+    totalLen += w.length;
+    return w;
+  });
+  var avgDL = totalLen / chunks.length;
+
+  // Document frequency per query term
+  var df = {};
+  words.forEach(function(w) {
+    if (df[w] !== undefined) return;
+    var count = 0;
+    chunks.forEach(function(ch) { if (ch.text.toLowerCase().indexOf(w) !== -1) count++; });
+    df[w] = count;
+  });
+
+  var scored = chunks.map(function(ch, i) {
+    var docWords = chunkWords[i];
+    var docLen = docWords.length;
+    var score = 0;
+
+    // Term frequencies for this chunk
+    var tf = {};
+    docWords.forEach(function(w) { tf[w] = (tf[w] || 0) + 1; });
+
+    words.forEach(function(w) {
+      var termFreq = tf[w] || 0;
+      if (termFreq === 0) return;
+      var idf = Math.log((chunks.length - df[w] + 0.5) / (df[w] + 0.5) + 1);
+      var tfNorm = (termFreq * (k1 + 1)) / (termFreq + k1 * (1 - b + b * (docLen / avgDL)));
+      score += idf * tfNorm;
+    });
+
+    return { index: i, score: score, text: ch.text, tokens: ch.tokens };
+  });
+
+  scored.sort(function(a, b) { return b.score - a.score; });
+  return scored.slice(0, 3).filter(function(s) { return s.score > 0; });
+}
+
+
+
+
+
+// =========================================================================
+// Run Query
+// =========================================================================
+document.getElementById('queryBtn').addEventListener('click', runQuery);
+document.getElementById('queryInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') runQuery();
+});
+
+function runQuery() {
+  var query = document.getElementById('queryInput').value.trim();
+  if (!query) return;
+
+  var strategies = ['fixed', 'recursive', 'sentence', 'markdown'];
+  if (allChunks.regex) strategies.push('regex');
+
+  var html = '<div style="display:grid;grid-template-columns:repeat(' + strategies.length + ',1fr);gap:8px">';
+
+  strategies.forEach(function(sid) {
+    var chunks = allChunks[sid];
+    if (!chunks) return;
+    var top3 = scoreChunks(query, chunks);
+    var analysis = allAnalysis[sid];
+
+    // Strategy column
+    html += '<div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:10px;border:1px solid var(--bdr)">';
+    html += '<div style="font-size:10px;font-weight:700;color:var(--teal);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">' + (STRAT_NAMES[sid] || sid) + '</div>';
+
+    if (top3.length === 0) {
+      html += '<div style="font-size:10px;color:var(--t3);font-style:italic;padding:8px 0">No matching chunks</div>';
+    } else {
+      top3.forEach(function(match, rank) {
+        var grade = analysis && analysis.chunks[match.index] ? analysis.chunks[match.index].grade : 'good';
+        var gradeColor = grade === 'good' ? 'var(--neon-g)' : grade === 'acceptable' ? 'var(--neon-y)' : 'var(--neon-r)';
+        var gradeEmoji = grade === 'good' ? '🟢' : grade === 'acceptable' ? '🟡' : '🔴';
+        var preview = match.text.substring(0, 120).replace(/\n/g, ' ');
+
+     html += '<div class="qr-match" data-strat="' + sid + '" data-rank="' + rank + '" style="margin-bottom:6px;padding:8px;background:rgba(255,255,255,0.02);border-radius:6px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 6px rgba(255,255,255,0.03)">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
+        html += '<span style="font-size:9px;font-weight:700;color:var(--t1)">Rank ' + (rank + 1) + ' · Chunk ' + (match.index + 1) + '</span>';
+        html += '<span style="font-size:8px">' + gradeEmoji + ' ' + match.tokens + ' tokens</span>';
+        html += '</div>';
+        html += '<div style="font-size:10px;color:var(--t2);line-height:1.5;font-family:var(--code)">' + escH(preview) + '...</div>';
+        html += '<div style="font-size:8px;color:var(--t3);margin-top:3px">Score: ' + match.score.toFixed(2) + '</div>';
+        html += '</div>';
+      });
+    }
+    html += '</div>';
+  });
+
+  html += '</div>';
+
+  // Highlight query words
+  var queryWords = query.toLowerCase().split(/\s+/).filter(function(w) { return w.length > 2; });
+  html += '<div style="margin-top:8px;font-size:9px;color:var(--t2)">Matched keywords: ';
+  queryWords.forEach(function(w) {
+    if (!STOP_WORDS.has(w)) html += '<span style="display:inline-block;padding:1px 6px;margin:1px 2px;border-radius:4px;font-size:8px;background:rgba(6,182,212,0.08);color:var(--teal);border:1px solid rgba(6,182,212,0.12)">' + w + '</span>';
+  });
+  html += '<span style="float:center;color:var(--t2);font-size:9px; font-style:italic">Uses BM25 Ranking Algorithm</span>';
+  html += '</div>';
+
+  document.getElementById('queryResults').innerHTML = html;
+
+  // Also highlight matching chunks in the strategy map
+  highlightQueryMatches(strategies, query);
+
+  // Add hover listeners to query result cards
+  document.querySelectorAll('.qr-match').forEach(function(card) {
+    var cardSid = card.getAttribute('data-strat');
+    var cardRank = parseInt(card.getAttribute('data-rank'));
+    
+    var chunks = allChunks[cardSid];
+    if (!chunks) return;
+    var top3 = scoreChunks(query, chunks);
+    if (!top3[cardRank]) return;
+    var chunkIdx = top3[cardRank].index;
+
+    card.addEventListener('mouseenter', function() {
+      // Highlight map block
+      document.querySelectorAll('.cblk').forEach(function(bl) { bl.classList.remove('hl-active'); });
+      var mapBlocks = document.querySelectorAll('.cblk[data-strat="' + cardSid + '"][data-idx="' + chunkIdx + '"]');
+      mapBlocks.forEach(function(bl) { bl.classList.add('hl-active'); });
+
+      // Highlight document viewer
+      if (cardSid !== activeStrat && allChunks[cardSid]) setActive(cardSid);
+      var an = allAnalysis[cardSid];
+      var grade = an && an.chunks[chunkIdx] ? an.chunks[chunkIdx].grade : 'good';
+      var gc = grade === 'good' ? 'glow-g' : grade === 'acceptable' ? 'glow-y' : 'glow-r';
+      var dt = document.getElementById('docText');
+      dt.classList.add('dimmed');
+      dt.querySelectorAll('.hl').forEach(function(s) { s.classList.remove('glow-g'); s.classList.remove('glow-y'); s.classList.remove('glow-r'); });
+      var spans = dt.querySelectorAll('.hl');
+      if (spans[chunkIdx]) {
+        spans[chunkIdx].classList.add(gc);
+        var docEl = document.getElementById('docPanel');
+        var rect = spans[chunkIdx].getBoundingClientRect();
+        var panelRect = docEl.getBoundingClientRect();
+        docEl.scrollTop += rect.top - panelRect.top - 60;
+      }
+    });
+
+    card.addEventListener('mouseleave', function() {
+      document.querySelectorAll('.cblk').forEach(function(bl) { bl.classList.remove('hl-active'); });
+      var dt = document.getElementById('docText');
+      dt.classList.remove('dimmed');
+      dt.querySelectorAll('.hl').forEach(function(s) { s.classList.remove('glow-g'); s.classList.remove('glow-y'); s.classList.remove('glow-r'); });
+    });
+  });
+}
+// =========================================================================
+// Highlight Query in Strategy Map
+// =========================================================================
+
+function highlightQueryMatches(strategies, query) {
+  document.querySelectorAll('.cblk').forEach(function(b) {
+    b.style.outline = '';
+    b.style.outlineOffset = '';
+  });
+
+  strategies.forEach(function(sid) {
+    var chunks = allChunks[sid];
+    if (!chunks) return;
+    var top3 = scoreChunks(query, chunks);
+
+    top3.forEach(function(match, rank) {
+      var color = rank === 0 ? '#f59e0b' : rank === 1 ? 'rgba(245,158,11,0.6)' : 'rgba(245,158,11,0.3)';
+      var blocks = document.querySelectorAll('.cblk[data-strat="' + sid + '"][data-idx="' + match.index + '"]');
+      blocks.forEach(function(b) {
+        b.style.outline = '2px solid ' + color;
+        b.style.outlineOffset = '1px';
+
+        var matchEl = document.querySelector('.qr-match[data-strat="' + sid + '"][data-rank="' + rank + '"]');
+        b.addEventListener('mouseenter', function() {
+          if (matchEl) matchEl.style.boxShadow = '0 0 14px rgba(10, 173, 237, 0.5), 0 0 48px rgba(255, 255, 255, 0.15)';
+          if (matchEl) matchEl.style.background = 'rgba(227, 226, 224, 0.15)';
+          if (matchEl) matchEl.style.borderColor = '#22d3ee';
+          if (matchEl) matchEl.style.transform = 'translateX(4px)';
+        });
+        b.addEventListener('mouseleave', function() {
+          if (matchEl) matchEl.style.boxShadow = '';
+          if (matchEl) matchEl.style.background = '';
+          if (matchEl) matchEl.style.border = '1px solid rgba(255,255,255,0.08)';
+          if (matchEl) matchEl.style.transform = '';
+        });
+      });
+    });
+  });
+}
+// =========================================================================
+// EVENTS
+// ========================
+document.getElementById('goBtn').onclick=runAll;
+['sizeR','overR','sentR'].forEach(function(id){document.getElementById(id).oninput=function(){document.getElementById(id.replace('R','V')).textContent=this.value}});
+document.querySelectorAll('.sbtn').forEach(function(b){b.onclick=function(){document.querySelectorAll('.sbtn').forEach(function(x){x.classList.remove('active')});this.classList.add('active');document.getElementById('textInput').value=SAMPLES[this.getAttribute('data-doc')];updStats()}});
+document.getElementById('textInput').oninput=updStats;
+function updStats(){var t=document.getElementById('textInput').value,tk=estimateTokens(t),w=t.trim()?t.trim().split(/\s+/).length:0;document.getElementById('inputStats').innerHTML='<strong>'+tk.toLocaleString()+'</strong> tokens · <strong>'+w.toLocaleString()+'</strong> words · <strong>'+t.length.toLocaleString()+'</strong> chars';document.getElementById('inputWarn').style.display=t.length>40000?'inline':'none';if(t.length>40000)document.getElementById('inputWarn').textContent=t.length>50000?'⚠ Truncated to 50K':'⚠ '+Math.round(t.length/500)+'% of limit'}
+
+// File upload with PDF support
+document.getElementById('fileInput').onchange=function(e){var f=e.target.files[0];if(!f)return;document.getElementById('fileName').textContent=f.name;if(f.name.toLowerCase().endsWith('.pdf')){var r=new FileReader();r.onload=function(ev){var arr=new Uint8Array(ev.target.result);pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';pdfjsLib.getDocument({data:arr}).promise.then(function(pdf){var allText=[];var total=pdf.numPages;function getPage(n){if(n>total){document.getElementById('textInput').value=allText.join('\n\n');updStats();return}pdf.getPage(n).then(function(page){page.getTextContent().then(function(tc){allText.push(tc.items.map(function(i){return i.str}).join(' '));getPage(n+1)})})}getPage(1)})};r.readAsArrayBuffer(f)}else{var r2=new FileReader();r2.onload=function(ev){document.getElementById('textInput').value=ev.target.result;updStats()};r2.readAsText(f)}};
+
+document.getElementById('vtInline').onclick=function(){this.classList.add('active');document.getElementById('vtCards').classList.remove('active');document.getElementById('docText').classList.remove('hide');document.getElementById('chunkCards').classList.remove('show')};
+document.getElementById('vtCards').onclick=function(){this.classList.add('active');document.getElementById('vtInline').classList.remove('active');document.getElementById('docText').classList.add('hide');document.getElementById('chunkCards').classList.add('show')};
+document.getElementById('codeBtn').onclick=function(){codeVis=!codeVis;document.getElementById('codeSection').classList.toggle('show',codeVis);if(codeVis)renderCode(activeStrat)};
+document.querySelectorAll('.ctab').forEach(function(t2){t2.onclick=function(){document.querySelectorAll('.ctab').forEach(function(x){x.classList.remove('active')});this.classList.add('active');codeFw=this.getAttribute('data-fw');renderCode(activeStrat)}});
+document.getElementById('jsonBtn').onclick=function(){if(!allChunks[activeStrat])return;var an=allAnalysis[activeStrat];var d=JSON.stringify(an.chunks.map(function(c,i){return{chunk:i+1,tokens:c.tokens,grade:c.grade,type:c.chunkType,keywords:c.keywords,density:c.density,signals:c.signals.map(function(s2){return{type:s2.type,text:s2.text,detail:s2.detail}}),text:allChunks[activeStrat][i].text}}),null,2);var bl=new Blob([d],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='chunks-'+activeStrat+'.json';a.click()};
+document.getElementById('shareBtn').onclick=function(){var s=getS(),p=new URLSearchParams();p.set('s',activeStrat);p.set('sz',s.size);p.set('ov',s.overlap);p.set('sn',s.sentences);var rx=document.getElementById('regexR').value;if(rx)p.set('rx',rx);p.set('d',document.querySelector('.sbtn.active')?.getAttribute('data-doc')||'');var u=location.origin+location.pathname+'?'+p;navigator.clipboard.writeText(u);var m=document.getElementById('copyMsg');m.textContent='Link copied!';m.style.opacity='1';setTimeout(function(){m.style.opacity='0'},2000)};
+
+// URL auto-load
+(function(){var sp=new URLSearchParams(location.search);if(!sp.has('s'))return;if(sp.has('sz')){document.getElementById('sizeR').value=sp.get('sz');document.getElementById('sizeV').textContent=sp.get('sz')}if(sp.has('ov')){document.getElementById('overR').value=sp.get('ov');document.getElementById('overV').textContent=sp.get('ov')}if(sp.has('sn')){document.getElementById('sentR').value=sp.get('sn');document.getElementById('sentV').textContent=sp.get('sn')}if(sp.has('rx'))document.getElementById('regexR').value=sp.get('rx');if(sp.has('d')&&SAMPLES[sp.get('d')]){document.getElementById('textInput').value=SAMPLES[sp.get('d')];document.querySelectorAll('.sbtn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-doc')===sp.get('d'))});updStats()}activeStrat=sp.get('s')||'recursive';setTimeout(runAll,300)})();
+</script>
+
+
+  
+</main>
+    
+    <!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-container">
+    <!-- Main Footer Content -->
+    <div class="footer-main">
+      <!-- Logo & About Section -->
+      <div class="footer-section footer-brand">
+        <div class="footer-logo">
+          <img src="/images/ai-agent-logo.png" alt="AI Agents Buzz Logo" width="120" height="auto">
+        </div>
+        <h3>AI Agents Buzz</h3>
+        <p class="tagline">Discover, Compare, and Deploy the Best AI Agents</p>
+        <div class="footer-social">
+          <a href="https://twitter.com/aiagentsbuzz" aria-label="Twitter"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 5.79997C21.2483 6.12606 20.4534 6.34163 19.64 6.43997C20.4982 5.92729 21.1413 5.12075 21.45 4.16997C20.6436 4.65003 19.7608 4.98826 18.84 5.16997C18.2235 4.50254 17.405 4.05826 16.5098 3.90682C15.6147 3.75537 14.6945 3.90532 13.8938 4.33319C13.093 4.76105 12.4569 5.44256 12.0852 6.27104C11.7135 7.09952 11.6273 8.02985 11.84 8.91997C10.2094 8.83856 8.61444 8.43457 7.15743 7.73553C5.70041 7.03648 4.41674 6.05912 3.39 4.85997C3.02914 5.4935 2.83952 6.20145 2.84 6.91997C2.83872 7.59082 3.00422 8.25015 3.32176 8.84133C3.6393 9.4325 4.09752 9.93815 4.66 10.32C4.00798 10.3003 3.37145 10.1218 2.8 9.79997V9.84997C2.80489 10.7986 3.13559 11.7149 3.73983 12.4416C4.34407 13.1683 5.18348 13.663 6.12 13.84C5.74326 13.9547 5.35286 14.011 4.96 14.0073C4.68224 14.0103 4.40499 13.9866 4.13 13.9366C4.40663 14.7486 4.91897 15.4602 5.59635 15.9785C6.27373 16.4967 7.08766 16.8013 7.93 16.85C6.56139 17.9406 4.87531 18.5228 3.14 18.53C2.78211 18.5308 2.42442 18.5116 2.07 18.4724C3.84382 19.6353 5.91012 20.2507 8.02 20.25C15.1 20.25 18.94 14.57 18.94 9.54997C18.94 9.36997 18.94 9.18997 18.93 9.00997C19.7385 8.41862 20.4535 7.69538 21.04 6.85997L21.05 6.82997C21.05 6.14997 21.04 5.59997 22 5.79997Z" fill="currentColor"/></svg></a>
+          <a href="https://github.com/ai-agents-buzz" aria-label="GitHub"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.475 2 2 6.475 2 12C2 16.425 4.8625 20.1625 8.8375 21.4875C9.3375 21.575 9.525 21.275 9.525 21.0125C9.525 20.775 9.5125 19.9875 9.5125 19.15C7 19.6125 6.35 18.5375 6.15 17.975C6.0375 17.6875 5.55 16.8 5.125 16.5625C4.775 16.375 4.275 15.9125 5.1125 15.9C5.9 15.8875 6.4625 16.625 6.65 16.925C7.55 18.4375 8.9875 18.0125 9.5625 17.75C9.65 17.1 9.9125 16.6625 10.2 16.4125C7.975 16.1625 5.65 15.3 5.65 11.475C5.65 10.3875 6.0375 9.4875 6.675 8.7875C6.575 8.5375 6.225 7.5125 6.775 6.1375C6.775 6.1375 7.6125 5.875 9.525 7.1625C10.325 6.9375 11.175 6.825 12.025 6.825C12.875 6.825 13.725 6.9375 14.525 7.1625C16.4375 5.8625 17.275 6.1375 17.275 6.1375C17.825 7.5125 17.475 8.5375 17.375 8.7875C18.0125 9.4875 18.4 10.375 18.4 11.475C18.4 15.3125 16.0625 16.1625 13.8375 16.4125C14.2 16.725 14.5125 17.325 14.5125 18.2625C14.5125 19.6 14.5 20.675 14.5 21.0125C14.5 21.275 14.6875 21.5875 15.1875 21.4875C19.1375 20.1625 22 16.4125 22 12C22 6.475 17.525 2 12 2Z" fill="currentColor"/></svg></a>     </div>
+      </div>
+
+      <!-- Navigation Section -->
+      <div class="footer-section">
+        <h4>Navigate</h4>
+        <nav class="footer-links">
+          <a href="/">Home</a>
+                     <div class="nav-dropdown">
+    <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+        Guides <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left:4px;"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="nav-dropdown-menu">
+        <a href="/guides/build-vs-buy-ai-guide/">Build vs. Buy AI Guide</a>
+        <a href="/guides/rag-chunking-strategies/">RAG Chunking Strategies</a>
+        <!-- add more tools here later -->
+    </div>
+</div>
+ <div class="nav-dropdown">
+    <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+        Tools <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left:4px;"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="nav-dropdown-menu">
+        <a href="/tools/ai-cost-calculator/">API Cost Calculator</a>
+        <a href="/tools/build-vs-buy-calculator/">Build vs. Buy Calculator</a>
+         <a href="/tools/rag-chunking-playground/">RAG Chunking Playground</a>
+        <!-- add more tools here later -->
+    </div>
+</div>
+
+          <a href="/categories/">Categories</a>
+          <a href="/news/">News</a>
+          <a href="/contact/">Contact</a>
+          <a href="/submit/" class="highlight">Submit Your Agent</a>
+        </nav>
+      </div>
+
+      <!-- Contact Info Section -->
+      <div class="footer-section footer-contact">
+        <h4>Contact Us</h4>
+        <address>
+          <p><a href="mailto:hi@aiagentsbuzz.com">hi@aiagentsbuzz.com</a></p>
+        </address>
+      </div>
+    </div>
+    
+    <!-- Categories Section -->
+    <div class="footer-categories-section">
+      <h4>Explore AI Agent Categories</h4>
+      <div class="categories-grid">
+        <div class="category-column">
+          <a href="/categories/agent-frameworks/" class="category-link">
+            <span class="category-name">Agent Frameworks</span>
+          </a>
+          <a href="/categories/voice/" class="category-link">
+            <span class="category-name">Voice</span>
+          </a>
+          <a href="/categories/customer-service/" class="category-link">
+            <span class="category-name">Customer Service</span>
+          </a>
+          <a href="/categories/personal-assistant/" class="category-link">
+            <span class="category-name">Personal Assistant</span>
+          </a>
+          <a href="/categories/content-creation/" class="category-link">
+            <span class="category-name">Content Creation</span>
+          </a>
+          <a href="/categories/marketing/" class="category-link">
+            <span class="category-name">Marketing</span>
+          </a>
+          <a href="/categories/video/" class="category-link">
+            <span class="category-name">Video</span>
+          </a>
+          <a href="/categories/audio/" class="category-link">
+            <span class="category-name">Audio</span>
+          </a>
+          <a href="/categories/travel/" class="category-link">
+            <span class="category-name">Travel</span>
+          </a>
+        </div>
+        <div class="category-column">
+         
+          <a href="/categories/workflow/" class="category-link">
+            <span class="category-name">Workflow</span>
+          </a>
+          <a href="/categories/images/" class="category-link">
+            <span class="category-name">Images</span>
+          </a>
+          <a href="/categories/finance/" class="category-link">
+            <span class="category-name">Finance</span>
+          </a>
+          <a href="/categories/coding/" class="category-link">
+            <span class="category-name">Coding</span>
+          </a>
+          <a href="/categories/avatars/" class="category-link">
+            <span class="category-name">Avatars</span>
+          </a>
+          <a href="/categories/testing-security/" class="category-link">
+            <span class="category-name">Testing & Security</span>
+          </a>
+          <a href="/categories/websites/" class="category-link">
+            <span class="category-name">Websites</span>
+          </a>
+          <a href="/categories/seo/" class="category-link">
+            <span class="category-name">SEO</span>
+          </a>
+            <a href="/categories/rag-retrieval/" class="category-link">
+            <span class="category-name">RAG & Retrieval</span>
+          </a>
+        </div>
+        <div class="category-column">
+          <a href="/categories/games/" class="category-link">
+            <span class="category-name">Games</span>
+          </a>
+          <a href="/categories/digital-workers/" class="category-link">
+            <span class="category-name">Digital Workers</span>
+          </a>
+          <a href="/categories/research/" class="category-link">
+            <span class="category-name">Research</span>
+          </a>
+          <a href="/categories/sales/" class="category-link">
+            <span class="category-name">Sales</span>
+          </a>
+          <a href="/categories/recruiting/" class="category-link">
+            <span class="category-name">Recruiting</span>
+          </a>
+          <a href="/categories/data/" class="category-link">
+            <span class="category-name">Data</span>
+          </a>
+          <a href="/categories/crypto/" class="category-link">
+            <span class="category-name">Crypto</span>
+          </a>
+          <a href="/categories/design/" class="category-link">
+            <span class="category-name">Design</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Bottom Section -->
+    <div class="footer-bottom">
+      <div class="footer-copyright">
+        <p>&copy; 2026 AI Agents Buzz. All rights reserved.</p>
+      </div>
+      <div class="footer-legal">
+        <a href="/">Home</a>
+
+
+        <a href="/privacy-policy/">Privacy Policy</a>
+        <a href="/terms-of-use/">Terms of Use</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/list-pagination.js"></script>
+
+
+<!-- Clicky Tracking -->
+<script async data-id="101491365" src="//static.getclicky.com/js"></script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/101491365ns.gif" /></p></noscript>
+
+<!-- Supabase Client Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Initialize Supabase -->
+<script>
+  var SUPABASE_URL = 'https://ysgomhsqyajujujbgfns.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_C4XNxG6Wyh11xr8fa0u51g_PgSPdDcZ';
+  
+  if (!window.supabase_client) {
+    window.supabase_client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log('✅ Supabase initialized');
+  }
+  var supabase = window.supabase_client;
+</script>
+
+<!-- Review Form JavaScript -->
+<script src="/js/reviews.js"></script>  <!-- ADD THIS LINE -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get ALL dropdowns (navbar + footer)
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+
+    dropdowns.forEach(function(dropdown) {
+        const toggle = dropdown.querySelector('.nav-dropdown-toggle');
+        
+        if (!toggle) return;
+
+        // Toggle on click
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Close other dropdowns first
+            dropdowns.forEach(function(otherDropdown) {
+                if (otherDropdown !== dropdown) {
+                    otherDropdown.classList.remove('open');
+                    const otherToggle = otherDropdown.querySelector('.nav-dropdown-toggle');
+                    if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Toggle this dropdown
+            const isOpen = dropdown.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', isOpen);
+        });
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        dropdowns.forEach(function(dropdown) {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+                const toggle = dropdown.querySelector('.nav-dropdown-toggle');
+                if (toggle) toggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            dropdowns.forEach(function(dropdown) {
+                dropdown.classList.remove('open');
+                const toggle = dropdown.querySelector('.nav-dropdown-toggle');
+                if (toggle) toggle.setAttribute('aria-expanded', 'false');
+            });
+        }
+    });
+});
+</script>
+
+</body>
+</html>
