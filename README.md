@@ -40,7 +40,7 @@ You need to **SEE** the difference, not guess.
 
 ## Features
 
-✅ **6 strategies compared:** Fixed, Recursive, Sentence, Markdown, Regex, Semantic (coming soon)
+✅ **6 strategies compared:** Fixed, Recursive, Sentence, Markdown, Regex, Semantic (coming soon)  
 ✅ **Live quality grading:** Green (clean), Yellow (warnings), Red (broken chunks)  
 ✅ **Visual diff view:** Hover any chunk to highlight it in the doc  
 ✅ **Cost calculator:** Embedding + context window costs for OpenAI/Cohere  
@@ -71,7 +71,7 @@ No build step. No dependencies. Just open `index.html` in your browser.
 - Pure vanilla JavaScript (no frameworks)
 - Tokenization via GPT-3 estimation (1 token ≈ 4 chars)
 - All processing happens client-side
-- Optional: Semantic chunking via OpenAI Embeddings API
+- Coming Soon: Semantic chunking via OpenAI Embeddings API
 
 **Strategy Comparison:**
 
@@ -125,7 +125,7 @@ Visual, interactive beats reading theory
 - **Query:** Uses BM25 for query selection
 - **PDF Support:** PDF.js
 - **Token Counting:** GPT-3 estimation (1 token ≈ 4 chars)
-- **Optional:** OpenAI API for semantic chunking
+- **Coming Soon:** OpenAI API for semantic chunking
 
 ---
 
@@ -151,9 +151,9 @@ Found a bug? Have a new strategy idea? **PRs welcome!**
 
 ## Learn More
 
-📖 **[Full RAG Chunking Strategy Guide](https://aiagentsbuzz.com/guides/rag-chunking-strategies/)** - 4000+ words with benchmarks, decision framework, and real data  
-🧰 **[Buy vs. Build Calculator](https://aiagentsbuzz.com/tools/build-vs-buy-calculator/)** - Should you build a custom agent or buy one off the shelf?
-🤖 **[AI Agents Directory](https://aiagentsbuzz.com)** - 300+ AI agents reviewed  
+ **[Full RAG Chunking Strategy Guide](https://aiagentsbuzz.com/guides/rag-chunking-strategies/)** - 4000+ words with benchmarks, decision framework, and real data   
+ **[Buy vs. Build Calculator](https://aiagentsbuzz.com/tools/build-vs-buy-calculator/)** - Should you build a custom agent or buy one off the shelf?  
+ **[AI Agents Directory](https://aiagentsbuzz.com)** - 300+ AI agents reviewed  
 
 ---
 
@@ -161,7 +161,7 @@ Found a bug? Have a new strategy idea? **PRs welcome!**
 
 ⭐ **Star this repo** if it helped you build better RAG systems!
 
-🐛 **Report issues** in the GitHub Issues tab
+**Report issues** in the GitHub Issues tab
 
 ---
 
